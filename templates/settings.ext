@@ -1,0 +1,101 @@
+{% extends "basic.tm" %}
+
+{% block content %}
+    <!--
+    <div id="configbg">
+<img src="/static/images/configbg.png" alt="background image" id="bg" />
+    </bg>
+    -->
+
+
+<div class="domtab">
+        <div id="dialog" class="window">
+            <font color = "white"></font><img style = "padding: 10px" src = "/static/images/loader.gif">
+        </div>
+    <ul class="domtabs">
+      <li><a href="#MITM">MITM Settings</a></li>
+      <li><a href="#Ettercap">Configuration</a></li>
+      <li><a href="#Advanced">Advanced Settings</a></li>
+    </ul>
+    
+  <div id = "intab">
+    <fieldset class = "menu">
+    <legend><h2><a name="MITM" id="MITM">Subterfuge Configuration Menu:</a></h2></legend>
+        <br>
+        <fieldset class = "reset"><legend>&nbsp;Reset&nbsp;</legend>
+            <div id = "resetbox">
+                Clear captured credentials from the database:    <a href = "#" name = "reset"><div id = "redbutton">Purge Data</div></a>
+            </div>
+        </fieldset>
+        
+		  <a href = "#" name = "update"><div id = "redbutton">Update</div></a>
+
+		  
+        <form name = "configform" method = "post" action = "/config/settings/">
+          
+        <fieldset class = "generalsettings">
+    
+        <legend>&nbsp;General Settings&nbsp;</legend>
+        
+        <table>
+        <tr>
+        <td>Interface:</td>
+        <td><select name = "iface" class = "iface">
+        {% if iface %}
+        		{% for inet in iface %}
+        <option value = "{{ inet }}">{{ inet }}</option>
+        		{% endfor %}
+		  {% endif %}
+        </select></td>
+        </tr>
+        <tr>
+        <td class = "autogate">Gateway:</td>
+        <td class = "autogate"><select name = "agw" class = "iface">
+        {% if gateway %}
+        		{% for iface in gateway %}
+        <option value = "{{ iface }}">{{ iface }}</option>
+        		{% endfor %}
+		  {% endif %}
+        </select>
+        <a href = "#" name = "manualgate"><div id = "gatebutton" style = "margin-top: 10px; margin-bottom: 10px;">Manual Gateway</div></a></td>
+        </tr>
+        <tr>
+        <td class = "manualgate">Gateway:</td>
+        <td class = "manualgate"><input type = "text" name = "mgw" /></td>
+        </tr>
+        <tr>
+        <td>AutoConfigure:</td>
+        <input type = "hidden" name = "auto" value = "no">
+        <td><input type = "checkbox" name = "auto" value = "yes" {% if config.20|length > 3 %} checked = "checked" {% endif %}/></td>
+        </tr>
+        <tr>
+        <td>ARP Single Clients:</td>
+        <td><input type = "text" name = "single" value = "" /></td>
+        </tr>
+        </table>
+        </fieldset>   
+    <a href = "javascript: setconfig()" name = "apply"><div id = "redbutton" style = "margin-top: 30px;">Apply</div></a>
+    </fieldset>
+    <script type = "text/javascript">
+    function setconfig()
+    {
+      document.configform.submit();
+    }
+    </script>
+    </form>
+  </div>
+  
+  
+  <div id = "intab">
+    <h2><a name="Ettercap" id="Ettercap">Configuration</a></h2>
+    <p>More To Come</p>
+  </div>
+  <div id = "intab">
+    <h2><a name="Advanced" id="Advanced">Oh No More Settings...</a></h2>
+    <p>jk</p>
+  </div>
+</div>
+<div id = "invis">
+</div>
+
+{% endblock %}

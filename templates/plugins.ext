@@ -1,0 +1,257 @@
+{% extends "basic.tm" %}
+
+{% block content %}
+    <!--
+    <div id="configbg">
+<img src="/static/images/configbg.png" alt="background image" id="bg" />
+    </bg>
+    -->
+<script type="text/javascript">
+$(document).ready(function() {  
+ 
+        //select all the a tags named reset
+    $('a[name=reset]').click(function(e) {
+            //Cancel the link behavior
+        e.preventDefault();
+            //Get the A tag         
+        var id = $(this).attr('href');
+     
+            //Get the screen height and width
+        var maskHeight = $(document).height();
+        var maskWidth = $(window).width();
+     
+     
+            //Get the window height and width
+        var winH = $(window).height();
+        var winW = $(window).width();
+               
+            //Set the popup window to center
+        $(id).css('top',  winH/2-$(id).height()/2);
+        $(id).css('left', winW/2-$(id).width()/2);     
+        $(id).fadeIn(4000);
+        
+            //Start Pwning
+        $('#intab').load('/resetpwn/');
+        
+    
+        $(".window").show("slow")
+        $(".window").delay(3000).hide("slow");
+    });         
+     
+});
+
+
+
+
+
+$(document).ready(function() {  
+
+   $('#pluginconfigboxhttpinjection').hide();
+   $('#pluginconfigboxhijacking').hide();
+   $('#pluginconfigboxrace').hide();
+   $('#pluginconfigboxdnsspoof').hide();
+   $('#pluginconfigboxwireless').hide();
+   $('#pluginconfigboxevilgrade').hide();
+   
+{% if modules %}
+ {% for mod in modules %}
+         $("#pluginconfigbox{{ mod.name }}").hide();
+ {% endfor %}
+{% endif %}
+   
+});
+</script>
+<script type="text/javascript">
+function hideconfigs()
+{
+   $('#pluginconfigboxbase').hide();
+   $('#pluginconfigboxhttpinjection').hide();
+   $('#pluginconfigboxharvester').hide();
+   $('#pluginconfigboxhijacking').hide();
+   $('#pluginconfigboxrace').hide();
+   $('#pluginconfigboxdnsspoof').hide();
+   $('#pluginconfigboxwireless').hide();
+   $('#pluginconfigboxevilgrade').hide();
+   $('#pluginconfigboxbuilder').hide();
+   $('#pluginconfigboxtunnelblock').hide();
+   
+{% if modules %}
+ {% for mod in modules %}
+         $("#pluginconfigbox{{ mod.name }}").hide();
+ {% endfor %}
+{% endif %}
+   
+} 
+
+function showhttpinjectionconfig()
+{
+   hideconfigs();
+   $('#pluginconfigboxhttpinjection').fadeIn(1000).show();
+}
+function showhijackingconfig()
+{
+   hideconfigs();
+   $('#pluginconfigboxhijacking').fadeIn(1000).show();
+} 
+function showraceconfig()
+{
+   hideconfigs();
+   $('#pluginconfigboxrace').fadeIn(1000).show();
+} 
+function showdnsspoofconfig()
+{
+   hideconfigs();
+   $('#pluginconfigboxdnsspoof').fadeIn(1000).show();
+} 
+function showwirelessconfig()
+{
+   hideconfigs();
+   $('#pluginconfigboxwireless').fadeIn(1000).show();
+} 
+function showevilgradeconfig()
+{
+   hideconfigs();
+   $('#pluginconfigboxevilgrade').fadeIn(1000).show();
+} 
+</script>
+
+
+
+
+
+
+<div id = "pluginbox">
+<div id = "plugintitle">&nbsp;</div>
+   <div id = "pluginframe">
+
+        <!--     PLUGINS     -->
+
+      {% include "mods/netview.mod" %}
+      {% include "mods/harvester.mod" %}
+      {% include "mods/builder.mod" %}
+      {% include "mods/tunnelblock.mod" %}
+      {% include "mods/dos.mod" %}
+
+
+      <a href = "#httpcodeinjection">
+      <div onclick = "showhttpinjectionconfig()" id = "plugin" name = "{{plugin}}">
+      <img src = "/static/images/plugins/injection.png"><br>
+      HTTP Code Injection
+      </div>
+      </a>
+      <a href = "#hijacking">
+      <div onclick = "showhijackingconfig()" id = "plugin" name = "{{plugin}}">
+      <img src = "/static/images/plugins/hijacking.png"><br>
+      Session Hijacking
+      </div>
+      </a>
+      <a href = "#race">
+      <div onclick = "showraceconfig()" id = "plugin" name = "{{plugin}}">
+      <img src = "/static/images/plugins/race.png"><br>
+      Race Condition Exploitation
+      </div>
+      </a>
+      <a href = "#dnsspoof">
+      <div onclick = "showdnsspoofconfig()" id = "plugin" name = "{{plugin}}">
+      <img src = "/static/images/plugins/dnsspoof.png"><br>
+      DNS Spoofing
+      </div>
+      </a>
+      <a href = "#wireless">
+      <div onclick = "showwirelessconfig()" id = "plugin" name = "{{plugin}}">
+      <img src = "/static/images/plugins/wireless.png"><br>
+      Wireless Attack Suite
+      </div>
+      </a>
+      <a href = "#evilgrade">
+      <div onclick = "showevilgradeconfig()" id = "plugin" name = "{{plugin}}">
+      <img src = "/static/images/plugins/evilgrade.png"><br>
+      Evilgrade Update Exploitation
+      </div>
+      </a>
+   </div>
+   
+
+
+   <div id = "pluginframe">
+      <fieldset class = "pluginconfig"><legend>&nbsp;Plugin Settings&nbsp;</legend>
+            <div id = "pluginconfigboxbase">
+                Welcome to the Subterfuge Plugin Menu. This section allows you to control which plugins are running and customize your attack vectors. (Note multiple plugins may be run simultaneously)   <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 385px; color: white;">Apply</div></a>  
+            </div>
+            
+               <!--   PLUGIN SETTINGS     -->
+            
+            {% include "mods/netview_settings.mod" %}               
+            {% include "mods/harvester_settings.mod" %}
+            {% include "mods/builder_settings.mod" %}         
+            {% include "mods/tunnelblock_settings.mod" %}
+            {% include "mods/dos_settings.mod" %}
+            
+            
+            <div id = "pluginconfigboxhijacking">
+                The session hijacking plugin will allow a user to masquerade as a victim within the session that was hijacked. This attack occurs by stealing the cookie used to authenticate into a web service.
+                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 385px; color: white;">Apply</div></a>
+            </div>
+            <div id = "pluginconfigboxrace">
+                The race condition plugin will allow Subterfuge to return its own version of the web page that a user attempts to view. This modified version of the web page will contain a browser exploit, which can be used to attain arbitrary code execution on the victim’s machine. 
+                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 358px; color: white;">Apply</div></a>
+            </div>
+            <div id = "pluginconfigboxdnsspoof">
+                The DNS spoofing plugin will allow Subterfuge to supply false DNS information to a victim’s machine causing them to be redirected to an alternate location. 
+                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 410px; color: white;">Apply</div></a>
+            </div>
+            <div id = "pluginconfigboxwireless">
+                The Wireless AP Suite will have a number of extremely useful features, which will increase the functionality of Subterfuge. A user will be able to setup a fake access point through which a victim will connect, successfully creating a MITM situation. An advanced option would even listen for what computers in the nearby area are probing for and setup an access point spoofing networks the victims have previously connected to. This will allow the victim computers to connect to and route their traffic through Subterfuge without any user input. 
+                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 250px; color: white;">Apply</div></a>
+            </div>
+            <div id = "pluginconfigboxevilgrade">
+                Evilgrade is a tool that allows a user to spoof an update server on the network. When a victim starts up a program such as iTunes it automatically looks to see if updates exist. Evilgrade steps into this process and sends the victim a malicious payload. Subterfuge will include a module that simplifies the process, and incorporates it into the framework.
+  
+                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 305px; color: white;">Apply</div></a>
+            </div>
+            <div id = "pluginconfigboxhttpinjection">
+               Subterfuge's HTTP Code Injection Module allows a user to inject payloads directly into a target's browsing session. Payloads can be anything from simple javascript/HTML injections to browser exploits. You even write your own injects.          
+               <form name = "httpinjectionform" method = "post" action = "/config/httpinjection/">
+               <table>
+               <tr>
+               <td>Running:</td>
+               <input type = "hidden" name = "status" value = "no">
+               <td><input type = "checkbox" name = "status" value = "yes" {% if config.27|length > 3 %} checked = "checked" {% endif %}/></td>
+               </tr>
+               <tr class = "vector">
+               <td>Vector:</td>
+               <td>
+               <select name = "vector">
+                  <option value = "browser_autopwn">browser_autopwn</option>
+               </select>
+               <a href = "#" name = "custominjection"><div id = "redbutton" style = "margin-top: 10px; margin-bottom: 10px; color:white;">Custom Inject</div></a>
+               </td>               
+               </tr>
+               <tr class = "vector">
+               <td>Payload:</td>
+               <td>
+               <select name = "payload">
+                  <option value = "frameinjection">IFrame Injection</option>
+                  <option value = "redir">Window Redirection</option>
+                  <option value = "popup">Popup Window</option>
+               </select>
+               </td>               
+               </tr>
+               <tr class = "custominjection">
+               <td>Custom Injection:</td>
+               <td><textarea rows = "5" name = "custominject"></textarea></td>
+               </tr>
+               <a href = "javascript: setconfig()" name = "apply"><div id = "redbutton" style = "margin-top: 355px; color: white;">Apply</div></a>
+               <script type = "text/javascript">
+               function setconfig()
+               {
+                 document.httpinjectionform.submit();
+               }
+               </script>
+               </form>    
+            </div>
+      </fieldset>
+   </div>
+</div>
+
+{% endblock %}

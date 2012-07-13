@@ -157,7 +157,10 @@ class ServerConnection(HTTPClient):
         if (self.isImageRequest):
             self.shutdown()
         else:
-            HTTPClient.handleResponseEnd(self)
+	    try:
+                HTTPClient.handleResponseEnd(self)
+	    except:
+		pass
 
     def handleResponse(self, data):
         if (self.isCompressed):
@@ -200,8 +203,14 @@ class ServerConnection(HTTPClient):
         if (self.contentLength != None):
             self.client.setHeader('Content-Length', len(data))
         
-        self.client.write(data)
-        self.shutdown()       
+	try:
+        	self.client.write(data)
+	except:
+		pass
+	try:
+            self.shutdown()
+	except:
+	    pass
 
     def replaceSecureLinks(self, data):
         iterator = re.finditer(ServerConnection.urlExpression, data)
@@ -221,5 +230,8 @@ class ServerConnection(HTTPClient):
     def shutdown(self):
         if not self.shutdownComplete:
             self.shutdownComplete = True
-            self.client.finish()
+	    try:
+                self.client.finish()
+	    except:
+		pass
             self.transport.loseConnection()

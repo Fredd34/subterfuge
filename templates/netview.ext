@@ -154,15 +154,15 @@
   box-shadow: rgba(5, 5, 5, 5) 0 1px 2px;
 }
 
-    #netviewcont
-    {
-        background:url('/static/images/panel.jpg') repeat-x;
-        background-color: #d6e0e1;
-        width: auto;
-        min-height: 660px;
-        border-radius: 15px;
-        padding: 15px;
-    }
+#netviewcont
+{
+    background:url('/static/images/panel.jpg') repeat-x;
+    background-color: #d6e0e1;
+    width: auto;
+    min-height: 660px;
+    border-radius: 15px;
+    padding: 15px;
+}
 
 </style>
 
@@ -192,49 +192,63 @@ Enabled Modules: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <div id="modframe">
    <div id = "netctrl">
-   {% if client %}
-       {% for host in client %}
-       <script type="text/javascript">
-       $(document).ready(function() {  
-          $(".ctrlpanel1c{{ forloop.counter }}").hide();
-       });  
-       </script>
-        
-        
-        
            <!-- HTTP Code Injection Control Panel -->
-       <div id = "ctrlpanel" class="ctrlpanel1c{{ forloop.counter }}">
-          <form name = "httpinjectionform{{ forloop.counter }}" method = "post" action = "/config/httpinjection/">
+       <div id = "injectionctrl">
+          <form id = "injectionform" name = "httpinjectionform" method = "post" action = "/config/httpinjection/">
           Running:
-          <input type = "hidden" name = "status" value = "no">
-          <input type = "checkbox" name = "status" value = "yes" {% if config.27|length > 500 %} checked = "checked" {% endif %}/><br>
+          <input type = "hidden" id = "status" name = "status" value = "no">
+          <input type = "checkbox" id = "status" name = "status" value = "yes" {% if config.27|length > 500 %} checked = "checked" {% endif %}/><br>
           Vector:
-          <select name = "vector">
+          <select id = "vector" name = "vector">
              <option value = "browser_autopwn">browser_autopwn</option>
           </select>
           Payload:
-          <select name = "payload">
+          <select id = "payload" name = "payload">
              <option value = "frameinjection">IFrame Injection</option>
              <option value = "redir">Window Redirection</option>
              <option value = "popup">Popup Window</option>
           </select>
-          <input type = "hidden" name = "custominject" value = "">
-          <a href = "javascript: setconfig()" name = "apply"><div id = "redbutton" style = "margin-top: 320px; color: white;">Apply</div></a>
-          <script type = "text/javascript">
-          function setconfig()
-          {
-            $(".window").show("slow")
-            $(".window").delay(3000).hide("slow");
-            setTimeout(function() {document.httpinjectionform{{ forloop.counter }}.submit();}, 3500);
-          }
-          </script>
+          <div id = "injectiontarget">
+          </div>
+          <input type = "hidden" id = "custominject" name = "custominject" value = "">
+          <a href = "javascript: httpcodeinjection()" name = "apply"><div id = "redbutton" style = "margin-top: 320px; color: white;">Apply</div></a>
           </form>
           </table>
        </div>
-     {% endfor %}
-   {% endif %}
    </div>
  
+ 
+  <script type="text/javascript">
+   $("#injectionctrl").hide();
+   
+   //Current HostCount
+    
+       //Count number of hosts
+    var hostcount = 0;
+    {% if client %}
+       {% for host in client %}
+         hostcount++;
+       {% endfor %}
+   {% endif %}
+   
+    function setbasehostcount(){
+       document.getElementById('currenthostcount').innerHTML = hostcount;
+    }
+        
+       //Set/Hide BaseHostcount
+    $(document).ready(function() {  
+       $("#currenthostcount").hide();
+       setbasehostcount();
+    });  
+    
+  </script>
+  
+  <div id="currenthostcount">
+   0
+  </div>
+  <div id = "hostcheck">
+
+  </div>
  
    <div id="netviewmaincont">
    

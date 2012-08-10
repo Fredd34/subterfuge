@@ -68,9 +68,7 @@ function hideconfigs()
    $('#pluginconfigboxhttpinjection').hide();
    $('#pluginconfigboxharvester').hide();
    $('#pluginconfigboxhijacking').hide();
-   $('#pluginconfigboxrace').hide();
-   $('#pluginconfigboxdnsspoof').hide();
-   $('#pluginconfigboxwireless').hide();
+   $('#pluginconfigboxnetview').hide();
    $('#pluginconfigboxevilgrade').hide();
    $('#pluginconfigboxbuilder').hide();
    $('#pluginconfigboxtunnelblock').hide();
@@ -145,24 +143,6 @@ function showevilgradeconfig()
       Session Hijacking
       </div>
       </a>
-      <a href = "#race">
-      <div onclick = "showraceconfig()" id = "plugin" name = "{{plugin}}">
-      <img src = "/static/images/plugins/race.png"><br>
-      Race Condition Exploitation
-      </div>
-      </a>
-      <a href = "#dnsspoof">
-      <div onclick = "showdnsspoofconfig()" id = "plugin" name = "{{plugin}}">
-      <img src = "/static/images/plugins/dnsspoof.png"><br>
-      DNS Spoofing
-      </div>
-      </a>
-      <a href = "#wireless">
-      <div onclick = "showwirelessconfig()" id = "plugin" name = "{{plugin}}">
-      <img src = "/static/images/plugins/wireless.png"><br>
-      Wireless Attack Suite
-      </div>
-      </a>
       <a href = "#evilgrade">
       <div onclick = "showevilgradeconfig()" id = "plugin" name = "{{plugin}}">
       <img src = "/static/images/plugins/evilgrade.png"><br>
@@ -191,18 +171,6 @@ function showevilgradeconfig()
             <div id = "pluginconfigboxhijacking">
                 The session hijacking plugin will allow a user to masquerade as a victim within the session that was hijacked. This attack occurs by stealing the cookie used to authenticate into a web service.
                 <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 385px; color: white;">Apply</div></a>
-            </div>
-            <div id = "pluginconfigboxrace">
-                The race condition plugin will allow Subterfuge to return its own version of the web page that a user attempts to view. This modified version of the web page will contain a browser exploit, which can be used to attain arbitrary code execution on the victim’s machine. 
-                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 358px; color: white;">Apply</div></a>
-            </div>
-            <div id = "pluginconfigboxdnsspoof">
-                The DNS spoofing plugin will allow Subterfuge to supply false DNS information to a victim’s machine causing them to be redirected to an alternate location. 
-                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 410px; color: white;">Apply</div></a>
-            </div>
-            <div id = "pluginconfigboxwireless">
-                The Wireless AP Suite will have a number of extremely useful features, which will increase the functionality of Subterfuge. A user will be able to setup a fake access point through which a victim will connect, successfully creating a MITM situation. An advanced option would even listen for what computers in the nearby area are probing for and setup an access point spoofing networks the victims have previously connected to. This will allow the victim computers to connect to and route their traffic through Subterfuge without any user input. 
-                <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 250px; color: white;">Apply</div></a>
             </div>
             <div id = "pluginconfigboxevilgrade">
                 Evilgrade is a tool that allows a user to spoof an update server on the network. When a victim starts up a program such as iTunes it automatically looks to see if updates exist. Evilgrade steps into this process and sends the victim a malicious payload. Subterfuge will include a module that simplifies the process, and incorporates it into the framework.

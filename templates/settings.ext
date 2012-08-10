@@ -14,7 +14,7 @@
         </div>
     <ul class="domtabs">
       <li><a href="#MITM">MITM Settings</a></li>
-      <li><a href="#Ettercap">Configuration</a></li>
+      <li><a href="#Config">Configuration</a></li>
       <li><a href="#Advanced">Advanced Settings</a></li>
     </ul>
     
@@ -31,7 +31,7 @@
 		  <a href = "#" name = "update"><div id = "redbutton">Update</div></a>
 
 		  
-        <form name = "configform" method = "post" action = "/config/settings/">
+        <form name = "mitmform" method = "post" action = "/config/settings/">
           
         <fieldset class = "generalsettings">
     
@@ -40,7 +40,7 @@
         <table>
         <tr>
         <td>Interface:</td>
-        <td><select name = "iface" class = "iface">
+        <td><select name = "iface" id = "iface" class = "iface">
         {% if iface %}
         		{% for inet in iface %}
         <option value = "{{ inet }}">{{ inet }}</option>
@@ -50,7 +50,7 @@
         </tr>
         <tr>
         <td class = "autogate">Gateway:</td>
-        <td class = "autogate"><select name = "agw" class = "iface">
+        <td class = "autogate"><select name = "agw" id = "agw" class = "iface">
         {% if gateway %}
         		{% for iface in gateway %}
         <option value = "{{ iface }}">{{ iface }}</option>
@@ -61,34 +61,105 @@
         </tr>
         <tr>
         <td class = "manualgate">Gateway:</td>
-        <td class = "manualgate"><input type = "text" name = "mgw" /></td>
+        <td class = "manualgate"><input type = "text" name = "mgw" id = "mgw" /></td>
         </tr>
         <tr>
         <td>AutoConfigure:</td>
-        <input type = "hidden" name = "auto" value = "no">
-        <td><input type = "checkbox" name = "auto" value = "yes" {% if config.20|length > 3 %} checked = "checked" {% endif %}/></td>
+        <input type = "hidden" name = "auto" id = "auto" value = "no">
+        <td><input type = "checkbox" name = "auto" id = "auto" value = "yes" {% if config.20|length > 3 %} checked = "checked" {% endif %}/></td>
         </tr>
         <tr>
         <td>ARP Single Clients:</td>
-        <td><input type = "text" name = "single" value = "" /></td>
+        <td><input type = "text" name = "single" id = "single" value = "" /></td>
         </tr>
         </table>
         </fieldset>   
-    <a href = "javascript: setconfig()" name = "apply"><div id = "redbutton" style = "margin-top: 30px;">Apply</div></a>
+    <a href = "javascript: setmitm()" name = "apply"><div id = "redbutton" style = "margin-top: 30px;">Apply</div></a>
     </fieldset>
     <script type = "text/javascript">
-    function setconfig()
+    function setmitm()
     {
-      document.configform.submit();
+      initiating();
+      if (document.getElementById('mgw').value == "")
+      {
+	$.post("/config/settings/", {
+	      iface:	     document.getElementById('iface').value,
+	      agw:	     document.getElementById('agw').value,		
+	      auto:	     document.getElementById('auto').value,
+	      single:	     document.getElementById('single').value
+	});
+      }
+      else
+      {
+	$.post("/config/settings/", {
+	      iface:	     document.getElementById('iface').value,
+	      mgw:	     document.getElementById('mgw').value,		
+	      auto:	     document.getElementById('auto').value,
+	      single:	     document.getElementById('single').value
+	});
+      }
+
     }
     </script>
     </form>
   </div>
   
   
+
+
+  
+  
+  
   <div id = "intab">
-    <h2><a name="Ettercap" id="Ettercap">Configuration</a></h2>
-    <p>More To Come</p>
+	<fieldset class = "menu">
+	<legend><h2><a name="Config" id="Config">Subterfuge Configuration Menu:</a></h2></legend>
+        <br>
+	<form name = "configform" method = "post" action = "/config/settings2/">
+        <fieldset class = "speedctrl"><legend>&nbsp;Refresh Rates&nbsp;</legend>
+            <div id = "resetbox">
+		<table>
+		<tr>
+		<td>Page Reload Rate:</td>
+		<td><input type="range" min="0" max="50" value="3" onchange="showValue(this.value, 'range1')" /><span id="range1">3 secs</span></td>
+		</tr>
+		<tr>
+		<tr>
+		<td>Injection Rate:</td>
+		<td><input type="range" min="0" max="50" value="3" onchange="showValue(this.value, 'range3')" /><span id="range3">3 secs</span></td>
+		</tr>
+		</table>
+		<br>
+            </div>
+	</fieldset>
+        <fieldset class = "speedctrl"><legend>&nbsp;ARP Controls&nbsp;</legend>
+            <div id = "resetbox">
+		<table>
+		<tr>
+		<td>Dynamic Retention:</td>
+		<td><input type = "checkbox" name = "auto" value = "yes" checked = "checked"/></td>
+		</tr>
+		<td>ARP Poison Speed:</td>
+		<td><input type="range" min="0" max="50" value="8" onchange="showValue(this.value, 'range2')" /><span id="range2">8 secs</span></td>
+		</tr>
+		</table>
+		<br>
+            </div>
+	</fieldset>
+	<a href = "javascript: setconfig()" name = "apply"><div id = "redbutton" style = "margin-top: 125px;">Apply</div></a>
+	</fieldset>
+	</form>
+	<script type="text/javascript">
+	function setconfig()
+	{
+	  document.configform.submit();
+	}
+	function showValue(newValue, id)
+	{
+		newValue += " secs";
+		document.getElementById(id).innerHTML=newValue;
+	}
+	</script>
+    
   </div>
   <div id = "intab">
     <h2><a name="Advanced" id="Advanced">Oh No More Settings...</a></h2>

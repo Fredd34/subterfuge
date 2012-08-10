@@ -20,7 +20,16 @@ f = open(os.path.dirname(__file__) + '/subterfuge.conf', 'r')
 config = f.readlines()
 interface = config[15].rstrip("\n")
 gateway = config[17].rstrip("\n")
+routermac = config[19].rstrip("\n")
+attackerip = config[21].rstrip("\n")
 
+try:
+		#Run up arpwatch
+	os.system("python " + os.path.dirname(__file__) + "/utilities/arpwatch.py " + gateway + " " +  routermac + " " + attackerip + " &")
+	
+except:
+	print "Encountered an error configuring arpwatch. Terminating..."
+	print "Launching attack with standard configuration options."
 try:
 
 	def main():

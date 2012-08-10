@@ -15,7 +15,7 @@ function showtunnelblockconfig()
          <!--     PLUGIN ICONS     -->
       <a href = "#tunnelblock">
       <div onclick = "showtunnelblockconfig()" id = "plugin" name = "{{plugin}}">
-      <img src = "/static/images/plugins/TunnelBlock.png"><br>
+      <img src = "/static/images/plugins/tunnelblock.png"><br>
       Tunnel Block
       </div>
       </a>

@@ -5,8 +5,8 @@ class credentials(models.Model):
     username    = models.CharField(max_length=300)
     password    = models.CharField(max_length=300)
     date        = models.CharField(max_length=300)
-    
-class settings(models.Model):
+
+class setup(models.Model):
     iface       = models.CharField(max_length=300)
     gateway     = models.CharField(max_length=300)
     autoconf    = models.CharField(max_length=300)

@@ -39,7 +39,7 @@ def index(request):
 	      #Relay Template Variables
       return render_to_response("includes/credtable.inc", {
 	      "credential"    :   creds,
-	      "status"			 :	  status,
+	      "status"	      :	  status,
       })
    else:            
 	      #Check Arpspoof status
@@ -78,7 +78,34 @@ def plugins(request):
             "config"    :   config,
             "modules"   :   modules,
         })
+
+def hostcheck(request):
+    if request.is_ajax():
+      		#Read in Config File
+        f = open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r')
+        config = f.readlines()
         
+        		#Check ARP Poison status
+        command = "ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'"
+        a = os.popen(command)
+        reply = a.read()
+        if(len(reply)>1):
+        	status = "on"
+        else:
+        	status = "off"
+        
+        modules = installed.objects.all()
+        client  = iptrack.objects.exclude(id = "1").all()
+        scanout = scan.objects.all()
+        
+           #Relay Template Variables
+        return render_to_response("includes/hostcheck.inc", {
+            "config"    :   config,
+            "modules"   :   modules,
+            "client"    :   client,
+            "scan"      :   scanout,
+            "status"	:   status,
+        })        
         
 def netview(request):
     if request.is_ajax():
@@ -105,7 +132,7 @@ def netview(request):
             "modules"   :   modules,
             "client"    :   client,
             "scan"      :   scanout,
-            "status"		:	 status,
+            "status"	:   status,
         })
         
     else:
@@ -193,17 +220,31 @@ def conf(request, module):
       # Subterfuge Settings Configuration
       # Edit subterfuge.conf
    if module == "settings":
-      conf[15] = request.POST["iface"] + "\n"
+      try:
+         conf[15] = request.POST["iface"] + "\n"
+         print "Using Interface => " + request.POST["iface"]
+      except:
+         print "Interface Not Found... Skipping"
+         
       if request.POST["auto"] == "yes":
          conf[20] = "yes" + "\n"
       else:
          conf[20] = "no" + "\n"
-      if request.POST["agw"]:
+         
+      try:
          conf[17] = request.POST["agw"] + "\n"
-      if request.POST["mgw"]:
+         print "Using Gateway   => " + request.POST["agw"]
+      except:
+         print "Automatic Gateway was not selected"
+         
+      try:
          conf[17] = request.POST["mgw"] + "\n"
+         print "Using Gateway   => " + request.POST["mgw"]
+      except:
+         print "Manual Gateway was not selected"
          
          #Get the Local IP Address
+      '''
       f = os.popen("ifconfig " + conf[15] + " | grep \"inet addr\" | sed -e \'s/.*addr://;s/ .*//\'")
       temp2 = ''
       temp3 = ''
@@ -211,9 +252,11 @@ def conf(request, module):
 
       ipaddress = re.findall(r'\d*.\d*.\d*.\d*', temp)[0]
       conf[26] = ipaddress + "\n"
+      '''
 
    if module == "update":
-      os.system('xterm -e sh -c "python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'update.py' + '" &')
+      print 'python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'update.py'
+      os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'update.py')
 
       #################################
       #Subterfuge Module Configurations
@@ -315,7 +358,7 @@ def settings(request):
       return render_to_response("settings.ext", {
             "config"    :   config,
             "conf"      :   str(config[20]).rstrip('\n'),
-            "iface"		:	 result,
+            "iface"	:   result,
             "gateway"   :   gw,
             "status"    :   status,
          })

@@ -12,7 +12,7 @@ class iptrack(models.Model):
     os          = models.CharField(max_length=300, default = 'unknown')
     osdetails   = models.CharField(max_length=300)
     injected    = models.CharField(max_length=300)
-    expand     = models.CharField(max_length=300, default = '0')
+    expand      = models.CharField(max_length=300, default = '0')
     
     
 class scan(models.Model):

@@ -5,3 +5,17 @@ class credentials(models.Model):
     username    = models.CharField(max_length=300)
     password    = models.CharField(max_length=300)
     date        = models.CharField(max_length=300)
+    
+class settings(models.Model):
+    iface       = models.CharField(max_length=300)
+    gateway     = models.CharField(max_length=300)
+    autoconf    = models.CharField(max_length=300)
+    ploadrate   = models.CharField(max_length=300)
+    injectrate  = models.CharField(max_length=300)
+    arprate     = models.CharField(max_length=300)
+    smartarp    = models.CharField(max_length=300)
+   
+class progdirs(models.Model):
+    nmap        = models.CharField(max_length=300)
+    metasploit  = models.CharField(max_length=300)
+    evilgrade   = models.CharField(max_length=300)

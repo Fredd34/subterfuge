@@ -279,7 +279,6 @@ def conf(request, module):
       '''
 
    if module == "update":
-      print 'python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'update.py'
       os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'update.py')
 
       #################################

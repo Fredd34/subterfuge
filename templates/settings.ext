@@ -28,7 +28,7 @@
             </div>
         </fieldset>
         
-		  <a href = "#" name = "update"><div id = "redbutton">Update</div></a>
+		  <a href = "javascript: update()" name = "update"><div id = "redbutton">Update</div></a>
 
 		  
         <form name = "mitmform" method = "post" action = "/config/settings/">
@@ -106,6 +106,13 @@
 	});
       }
 
+    }
+    function update()
+    {
+      initiating();
+	$.post("/config/update/", {
+	      update:	     "yes"
+	});
     }
     </script>
     </form>

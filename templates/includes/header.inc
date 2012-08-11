@@ -259,35 +259,6 @@ $(document).ready(function() {
         $(".window").show("slow")
         $(".window").delay(3000).hide("slow");
     });
-	 
-	 
-	         //select all the a tags named reset
-    $('a[name=update]').click(function(e) {
-            //Cancel the link behavior
-        e.preventDefault();
-            //Get the A tag         
-        var id = $(this).attr('href');
-     
-            //Get the screen height and width
-        var maskHeight = $(document).height();
-        var maskWidth = $(window).width();
-     
-     
-            //Get the window height and width
-        var winH = $(window).height();
-        var winW = $(window).width();
-               
-            //Set the popup window to center
-        $(id).css('top',  winH/2-$(id).height()/2);
-        $(id).css('left', winW/2-$(id).width()/2);     
-        $(id).fadeIn(4000);
-            
-        $(".window").show("slow")
-        $(".window").delay(3000).hide("slow");
-		  
-	alert('Updating Subterfuge...');
-        $('#invis').delay(5000).load('/config/update/');
-    });
      
 });
  

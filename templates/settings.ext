@@ -121,18 +121,18 @@
 	<fieldset class = "menu">
 	<legend><h2><a name="Config" id="Config">Subterfuge Configuration Menu:</a></h2></legend>
         <br>
-	<form name = "configform" method = "post" action = "/config/settings2/">
+	<form name = "configform" method = "post" action = "/config/settings/">
         <fieldset class = "speedctrl"><legend>&nbsp;Refresh Rates&nbsp;</legend>
             <div id = "resetbox">
 		<table>
 		<tr>
 		<td>Page Reload Rate:</td>
-		<td><input type="range" min="0" max="50" value="3" onchange="showValue(this.value, 'range1')" /><span id="range1">3 secs</span></td>
+		<td><input type="range" min="0" max="50" id = "ploadrate" value="{% for settings in setup %}{{ settings.ploadrate }}{% endfor %}" onchange="showValue(this.value, 'range1')" /><span id="range1">{% for settings in setup %}{{ settings.ploadrate }} secs{% endfor %}</span></td>
 		</tr>
 		<tr>
 		<tr>
 		<td>Injection Rate:</td>
-		<td><input type="range" min="0" max="50" value="3" onchange="showValue(this.value, 'range3')" /><span id="range3">3 secs</span></td>
+		<td><input type="range" min="0" max="50" id = "injectrate" value="{% for settings in setup %}{{ settings.injectrate }}{% endfor %}" onchange="showValue(this.value, 'range3')" /><span id="range3">{% for settings in setup %}{{ settings.injectrate }} secs{% endfor %}</span></td>
 		</tr>
 		</table>
 		<br>
@@ -143,10 +143,10 @@
 		<table>
 		<tr>
 		<td>Dynamic Retention:</td>
-		<td><input type = "checkbox" name = "auto" value = "yes" checked = "checked"/></td>
+		<td><input type = "checkbox" id = "smartarp" {% for settings in setup %}{% if settings.smartarp|length > 2 %} checked = "checked" {% endif %}{% endfor %}/></td>
 		</tr>
 		<td>ARP Poison Speed:</td>
-		<td><input type="range" min="0" max="50" value="8" onchange="showValue(this.value, 'range2')" /><span id="range2">8 secs</span></td>
+		<td><input type="range" min="0" max="50" id = "arprate" value="{% for settings in setup %}{{ settings.arprate }}{% endfor %}" onchange="showValue(this.value, 'range2')" /><span id="range2">{% for settings in setup %}{{ settings.arprate }} secs{% endfor %}</span></td>
 		</tr>
 		</table>
 		<br>
@@ -158,7 +158,13 @@
 	<script type="text/javascript">
 	function setconfig()
 	{
-	  document.configform.submit();
+	  initiating();
+	  $.post("/config/settings/", {
+	      ploadrate	:	document.getElementById('ploadrate').value,
+	      injectrate:	document.getElementById('injectrate').value,
+	      smartarp	:	document.getElementById('smartarp').value,
+	      arprate	:	document.getElementById('arprate').value
+	});
 	}
 	function showValue(newValue, id)
 	{

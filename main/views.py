@@ -220,35 +220,52 @@ def conf(request, module):
       # Subterfuge Settings Configuration
       # Edit subterfuge.conf
    if module == "settings":
+         #Attack Setup
       try:
          setup.objects.update(iface = request.POST["iface"])
          conf[15] = request.POST["iface"] + "\n"
          print "Using Interface => " + request.POST["iface"]
       except:
-         print "Interface Not Found... Skipping"
-         
-      if request.POST["auto"] == "on":
-         setup.objects.update(autoconf = "yes")
-         conf[20] = "yes" + "\n"
-         print "Auto Configure  => yes"
-      else:
-         setup.objects.update(autoconf = "no")
-         conf[20] = "no" + "\n"
-         print "Auto Configure  => no"
+         pass
+      
+      try:
+         if request.POST["auto"] == "on":
+            setup.objects.update(autoconf = "yes")
+            conf[20] = "yes" + "\n"
+            print "Auto Configure  => yes"
+         else:
+            setup.objects.update(autoconf = "no")
+            conf[20] = "no" + "\n"
+            print "Auto Configure  => no"
+      except:
+         pass
          
       try:
          setup.objects.update(gateway = request.POST["agw"])
          conf[17] = request.POST["agw"] + "\n"
          print "Using Gateway   => " + request.POST["agw"]
       except:
-         print "Automatic Gateway was not selected"
+         pass
          
       try:
          setup.objects.update(gateway = request.POST["mgw"])
          conf[17] = request.POST["mgw"] + "\n"
          print "Using Gateway   => " + request.POST["mgw"]
       except:
-         print "Manual Gateway was not selected"
+         pass
+         
+         
+         #Configuration
+      try:
+         setup.objects.update(ploadrate = request.POST["ploadrate"])
+         setup.objects.update(injectrate = request.POST["injectrate"])
+         if request.POST["smartarp"] == "on":
+            setup.objects.update(smartarp = "yes")
+         else:
+            setup.objects.update(smartarp = "no")
+         setup.objects.update(arprate = request.POST["arprate"])
+      except:
+         pass
          
          #Get the Local IP Address
       '''

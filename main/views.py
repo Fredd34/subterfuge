@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 from django.template import RequestContext
     #Database Models
-from subterfuge.main.models import credentials
+from subterfuge.main.models import *
 from subterfuge.modules.models import *
     #Additional Views
 from subterfuge.cease.views import *
@@ -168,7 +168,7 @@ def netview(request):
             "modules"   :   modules,
             "client"    :   client,
             "scan"      :   scanout,
-            "status"		:	 status,
+            "status"	:   status,
         }) 
         
 
@@ -221,23 +221,30 @@ def conf(request, module):
       # Edit subterfuge.conf
    if module == "settings":
       try:
+         setup.objects.update(iface = request.POST["iface"])
          conf[15] = request.POST["iface"] + "\n"
          print "Using Interface => " + request.POST["iface"]
       except:
          print "Interface Not Found... Skipping"
          
-      if request.POST["auto"] == "yes":
+      if request.POST["auto"] == "on":
+         setup.objects.update(autoconf = "yes")
          conf[20] = "yes" + "\n"
+         print "Auto Configure  => yes"
       else:
+         setup.objects.update(autoconf = "no")
          conf[20] = "no" + "\n"
+         print "Auto Configure  => no"
          
       try:
+         setup.objects.update(gateway = request.POST["agw"])
          conf[17] = request.POST["agw"] + "\n"
          print "Using Gateway   => " + request.POST["agw"]
       except:
          print "Automatic Gateway was not selected"
          
       try:
+         setup.objects.update(gateway = request.POST["mgw"])
          conf[17] = request.POST["mgw"] + "\n"
          print "Using Gateway   => " + request.POST["mgw"]
       except:
@@ -339,7 +346,7 @@ def settings(request):
               gw.remove('')
               gw.reverse()
               
-        		#Read in Config File
+            #Read in Config File
       f = open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r')
       config = f.readlines()
         
@@ -352,7 +359,10 @@ def settings(request):
             status = "on"
       else:
             status = "off"
-           
+
+
+      currentsetup = setup.objects.all()
+             
            
             #Relay Template Variables
       return render_to_response("settings.ext", {
@@ -361,6 +371,7 @@ def settings(request):
             "iface"	:   result,
             "gateway"   :   gw,
             "status"    :   status,
+            "setup"     :   currentsetup,
          })
 
   

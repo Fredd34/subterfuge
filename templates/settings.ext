@@ -41,6 +41,10 @@
         <tr>
         <td>Interface:</td>
         <td><select name = "iface" id = "iface" class = "iface">
+	{% for settings in setup %}
+        <option value = "{{ settings.iface }}">{{ settings.iface }}</option>
+	{% endfor %}
+        <option value = "-----">-----</option>
         {% if iface %}
         		{% for inet in iface %}
         <option value = "{{ inet }}">{{ inet }}</option>
@@ -51,6 +55,10 @@
         <tr>
         <td class = "autogate">Gateway:</td>
         <td class = "autogate"><select name = "agw" id = "agw" class = "iface">
+	{% for settings in setup %}
+        <option value = "{{ settings.gateway }}">{{ settings.gateway }}</option>
+	{% endfor %}
+        <option value = "-----">-----</option>
         {% if gateway %}
         		{% for iface in gateway %}
         <option value = "{{ iface }}">{{ iface }}</option>
@@ -65,8 +73,7 @@
         </tr>
         <tr>
         <td>AutoConfigure:</td>
-        <input type = "hidden" name = "auto" id = "auto" value = "no">
-        <td><input type = "checkbox" name = "auto" id = "auto" value = "yes" {% if config.20|length > 3 %} checked = "checked" {% endif %}/></td>
+        <td><input type = "checkbox" name = "auto" id = "auto" {% for settings in setup %}{% if settings.autoconf|length > 2 %} checked = "checked" {% endif %}{% endfor %}/></td>
         </tr>
         <tr>
         <td>ARP Single Clients:</td>

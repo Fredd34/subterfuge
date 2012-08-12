@@ -20,13 +20,13 @@ from subterfuge.modules.views import *
 @never_cache
 def index(request):
    if request.is_ajax():
-	      #Get Creds from DB
+	 #Get Creds from DB
       creds = credentials.objects.all()
 
          #Reset Injection Counter
       iptrack.objects.update(injected = "0")
 
-	      #Check Arpspoof status
+	 #Check Arpspoof status
       command = "ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'"
       a = os.popen(command)
       reply = a.read()
@@ -395,6 +395,7 @@ def settings(request):
 def startpwn(request, method):
     if request.is_ajax():
       if (method == "auto"):
+      '''
         print "Running AutoPwn Method..."
               # Read in subterfuge.conf
         with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r') as file:
@@ -447,6 +448,8 @@ def startpwn(request, method):
             # Edit subterfuge.conf
         print "Using: ", result[0]
         print "Setting gateway as: ", autogate
+        setup.objects.update(gateway = autogate)
+        setup.objects.update(iface = result[0])
         conf[17] = autogate + "\n"
         conf[15] = result[0] + "\n"
              
@@ -462,7 +465,7 @@ def startpwn(request, method):
             # Write to subterfuge.conf
         with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'w') as file:
             file.writelines(conf)
-
+      '''
       
         print "Starting Pwn Ops..."
         os.system("python " + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "mitm.py -a &")

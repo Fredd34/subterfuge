@@ -7,7 +7,6 @@ import os
 import re
 import sys
 
-
 def main():
 
 	#Checks for sane arguments

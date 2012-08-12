@@ -7,6 +7,7 @@ class credentials(models.Model):
     date        = models.CharField(max_length=300)
 
 class setup(models.Model):
+    ip          = models.CharField(max_length=300)
     iface       = models.CharField(max_length=300)
     gateway     = models.CharField(max_length=300)
     autoconf    = models.CharField(max_length=300)
@@ -14,6 +15,7 @@ class setup(models.Model):
     injectrate  = models.CharField(max_length=300)
     arprate     = models.CharField(max_length=300)
     smartarp    = models.CharField(max_length=300)
+    routermac   = models.CharField(max_length=300)
    
 class progdirs(models.Model):
     nmap        = models.CharField(max_length=300)

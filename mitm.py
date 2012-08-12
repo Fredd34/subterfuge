@@ -81,9 +81,9 @@ try:
 		os.system('sysctl -w net.ipv4.ip_forward=1')
 	        print "IP Forwarding Enabled."
 	
-	#arpspoof tooled through Subterfuge:
+		#ARP Cache Poison through Subterfuge:
 	def arpspoof():
-		command = 'python ' + os.path.dirname(os.path.abspath(__file__)) + 'utilities/arpmitm.py ' + gateway + ' &'
+		command = 'python ' + os.path.dirname(os.path.abspath(__file__)) + '/utilities/arpmitm.py ' + gateway + ' &'
 		os.system(command)
 	
 	#SSLStrip tooled through Subterfuge:

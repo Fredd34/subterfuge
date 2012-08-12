@@ -376,7 +376,10 @@ def settings(request):
       else:
             status = "off"
 
-
+      '''
+      newmod = setup(iface = "dos")
+      newmod.save()
+      '''
       currentsetup = setup.objects.all()
              
            
@@ -395,7 +398,6 @@ def settings(request):
 def startpwn(request, method):
     if request.is_ajax():
       if (method == "auto"):
-      '''
         print "Running AutoPwn Method..."
               # Read in subterfuge.conf
         with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r') as file:
@@ -465,7 +467,7 @@ def startpwn(request, method):
             # Write to subterfuge.conf
         with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'w') as file:
             file.writelines(conf)
-      '''
+      
       
         print "Starting Pwn Ops..."
         os.system("python " + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "mitm.py -a &")

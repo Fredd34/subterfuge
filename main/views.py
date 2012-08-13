@@ -372,12 +372,8 @@ def settings(request):
       else:
             status = "off"
 
-      '''
-      newmod = setup(iface = "dos")
-      newmod.save()
-      '''
+
       currentsetup = setup.objects.all()
-             
            
             #Relay Template Variables
       return render_to_response("settings.ext", {

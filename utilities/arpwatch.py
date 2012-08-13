@@ -58,7 +58,7 @@ def arp_monitor_callback(pkt):
 		return None
 
 	#Check Arguments
-if len(sys.argv) < 3:
+if len(sys.argv) < 4:
 	print "Encountered an error configuring arpwatch: Invalid Arguments. Terminating..."
 	exit()
 else:

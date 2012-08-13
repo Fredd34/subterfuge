@@ -1,3 +1,5 @@
+import os
+import sys
 from django.conf import settings
 settings.configure(DATABASE_ENGINE="sqlite3",
                    DATABASE_HOST="",
@@ -13,15 +15,39 @@ def attack(method):
     
     if (method == "auto"):
         print "Running AutoPwn Method..."
+            #AutoConfig
         autoconfig()
-        (interface, gateway, attackerip, routermac) = getinfo()
+        interface, gateway, attackerip, routermac, smartarp = getinfo()
         
+            #Begin Attack Setup
             #Start Up MITM
-        os.system("python " + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "mitm.py -a &")
+        os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
 
+            #Get & Log Router Mac
+        if (os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")):
+            f = open(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt", 'r')
+            mac = f.readline()
+            macaddr = mac.rstrip("\n")
+            setup.objects.update(routermac = macaddr)
+            
+            #Check for ARPWatch
+        if (smartarp == "yes"):
+            os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
+            
+        else:
+            print "Encountered an error configuring arpwatch: Router MAC Address Unknown. Terminating..."
         
+
+ 
     else:
-        (interface, gateway, attackerip, routermac) = getinfo()
+        interface, gateway, attackerip, routermac, smartarp = getinfo()
+            #Begin Attack Setup
+            #Start Up MITM
+        os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
+
+            #Check for ARPWatch
+        if (smartarp == "yes"):
+            os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
 
 
 
@@ -32,13 +58,14 @@ def getinfo():
         gateway       = settings.gateway
         attackerip    = settings.ip
         routermac     = settings.routermac
+        smartarp      = settings.smartarp
     
-    return interface, gateway, attackerip, routermac
+    return interface, gateway, attackerip, routermac, smartarp
 
 
 
 def autoconfig():
-          # Read in subterfuge.conf
+          # Read in subterfuge.conf Deprecate for Version 5.0
     with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r') as file:
         conf = file.readlines()
     
@@ -82,7 +109,7 @@ def autoconfig():
     gw.remove('')
     gw.reverse()
     
-        #Read in Config File
+        #Read in Config File Deprecate for Version 5.0
     f = open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r')
     conf = f.readlines()
          
@@ -94,7 +121,7 @@ def autoconfig():
 
     ipaddress = re.findall(r'\d*.\d*.\d*.\d*', temp)[0]
     
-        # Edit subterfuge.conf
+        # Edit subterfuge.conf Deprecate for Version 5.0
     print "Using: ", result[0]
     print "Setting gateway as: ", autogate
     conf[17] = autogate + "\n"
@@ -106,6 +133,14 @@ def autoconfig():
     setup.objects.update(iface = result[0])
     setup.objects.update(ip = ipaddress) 
     
-        # Write to subterfuge.conf
+        # Write to subterfuge.conf Deprecate for Version 5.0
     with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'w') as file:
         file.writelines(conf)
+        
+    #Check Arguments
+if len(sys.argv) < 1:
+    print "Encountered an error configuring attack: Invalid Arguments. Terminating..."
+    exit()
+else:
+    attack(sys.argv[1])
+        

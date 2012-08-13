@@ -5,6 +5,8 @@ from scapy.all import *
 import time
 import os
 import sys
+
+	#Initialize Globals
 gatewayip = '' #first argument
 routermac = '' #second argument
 myip = '' #third argument
@@ -55,12 +57,18 @@ def arp_monitor_callback(pkt):
 			send(packet, verbose=0)
 		return None
 
+	#Check Arguments
 if len(sys.argv) < 3:
-	print "Invalid Arguments"
+	print "Encountered an error configuring arpwatch: Invalid Arguments. Terminating..."
 	exit()
 else:
-	gatewayip = sys.argv[1]
-	routermac = sys.argv[2]
-	myip = sys.argv[3]
+	gatewayip = sys.argv[1]	#first argument
+	routermac = sys.argv[2]	#second argument
+	myip = sys.argv[3]	#third argument
+	
+	print "Initializing ARPWatch..."
+	print "Gateway          =>", gatewayip
+	print "Router MAC       =>", routermac
+	print "Local IP Address =>", myip
 
 sniff(prn=arp_monitor_callback, filter="arp", store=0)

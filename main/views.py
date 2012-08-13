@@ -16,6 +16,7 @@ from subterfuge.modules.models import *
 from subterfuge.cease.views import *
 from subterfuge.modules.views import *
 
+
 @csrf_protect
 @never_cache
 def index(request):
@@ -253,6 +254,19 @@ def conf(request, module):
          print "Using Gateway   => " + request.POST["mgw"]
       except:
          pass
+
+         #Get the Local IP Address
+      try:
+         f = os.popen("ifconfig " + request.POST["iface"] + " | grep \"inet addr\" | sed -e \'s/.*addr://;s/ .*//\'")
+         temp2 = ''
+         temp3 = ''
+         temp = f.readline().rstrip('\n')
+   
+         ipaddress = re.findall(r'\d*.\d*.\d*.\d*', temp)[0]
+         conf[26] = ipaddress + "\n"
+         setup.objects.update(ip = ipaddress)
+      except:
+         pass
          
          
          #Configuration
@@ -267,16 +281,6 @@ def conf(request, module):
       except:
          pass
          
-         #Get the Local IP Address
-      '''
-      f = os.popen("ifconfig " + conf[15] + " | grep \"inet addr\" | sed -e \'s/.*addr://;s/ .*//\'")
-      temp2 = ''
-      temp3 = ''
-      temp = f.readline().rstrip('\n')
-
-      ipaddress = re.findall(r'\d*.\d*.\d*.\d*', temp)[0]
-      conf[26] = ipaddress + "\n"
-      '''
 
    if module == "update":
       os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'update.py')
@@ -307,7 +311,7 @@ def conf(request, module):
       
       
       # Call Index Page
-	   # Check Arpspoof status
+      # Check Arpspoof status
    command = "ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'"
    a = os.popen(command)
    reply = a.read()
@@ -397,9 +401,9 @@ def settings(request):
         #Command Definitions:
 def startpwn(request, method):
     if request.is_ajax():
-      attack(method)
+      os.system("python " + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "attackctrl.py " + method +" &")
     else:            
-        print "Nope... Chuck Testa!"
+      print "Nope... Chuck Testa!"
         
 def stoppwn(request):
     if request.is_ajax():

@@ -81,5 +81,6 @@ def rearp(gateway):
 		print 'Network Re-ARP Completed'
 	else:
 		print 'Router MAC address could not be found. Re-ARPing failed.'
+		
 if __name__ == '__main__':
-			 main()
+	main()

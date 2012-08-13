@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 from django.conf import settings
 settings.configure(DATABASE_ENGINE="sqlite3",
@@ -13,10 +14,33 @@ from main.models import *
 def attack(method):
     print "Starting Pwn Ops..."
     
+        #Auto Pwn Method
     if (method == "auto"):
         print "Running AutoPwn Method..."
             #AutoConfig
         autoconfig()
+        interface, gateway, attackerip, routermac, smartarp = getinfo()
+        
+            #Begin Attack Setup
+            #Start Up MITM
+        os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
+
+            #Get & Log Router Mac
+        if (os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/utilities/arpmitm.txt")):
+            f = open(os.path.dirname(os.path.abspath(__file__)) + "/utilities/arpmitm.txt", 'r')
+            mac = f.readline()
+            macaddr = mac.rstrip("\n")
+            setup.objects.update(routermac = macaddr)
+            
+                #Check for ARPWatch
+            if (smartarp == "yes"):
+                os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
+            
+        else:
+            print "Encountered an error configuring arpwatch: Router MAC Address Unknown. Terminating..."
+        
+        #Standard Attack Method
+    else:
         interface, gateway, attackerip, routermac, smartarp = getinfo()
         
             #Begin Attack Setup
@@ -36,18 +60,6 @@ def attack(method):
             
         else:
             print "Encountered an error configuring arpwatch: Router MAC Address Unknown. Terminating..."
-        
-
- 
-    else:
-        interface, gateway, attackerip, routermac, smartarp = getinfo()
-            #Begin Attack Setup
-            #Start Up MITM
-        os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
-
-            #Check for ARPWatch
-        if (smartarp == "yes"):
-            os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
 
 
 
@@ -66,7 +78,7 @@ def getinfo():
 
 def autoconfig():
           # Read in subterfuge.conf Deprecate for Version 5.0
-    with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r') as file:
+    with open(str(os.path.dirname(__file__)) + '/subterfuge.conf', 'r') as file:
         conf = file.readlines()
     
         # Get AutoConfiguration Information
@@ -110,7 +122,7 @@ def autoconfig():
     gw.reverse()
     
         #Read in Config File Deprecate for Version 5.0
-    f = open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r')
+    f = open(str(os.path.dirname(__file__)) + '/subterfuge.conf', 'r')
     conf = f.readlines()
          
         #Get the Local IP Address
@@ -134,7 +146,7 @@ def autoconfig():
     setup.objects.update(ip = ipaddress) 
     
         # Write to subterfuge.conf Deprecate for Version 5.0
-    with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'w') as file:
+    with open(str(os.path.dirname(__file__)) + '/subterfuge.conf', 'w') as file:
         file.writelines(conf)
         
     #Check Arguments

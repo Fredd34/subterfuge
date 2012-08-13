@@ -24,4 +24,3 @@ def cease():
 		#ReARP The Network
 	os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'utilities/arpmitm.py -r ' + gateway + ' &')
 
-#File Good for Version 5.0

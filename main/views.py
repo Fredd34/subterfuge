@@ -140,15 +140,7 @@ def netview(request):
       		#Read in Config File
         f = open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r')
         config = f.readlines()
-        
-        '''
-        newmod = installed(name = "httpcodeinjection")
-        newmod.save()
-        newmod = installed(name = "tunnelblock")
-        newmod.save()
-        newmod = installed(name = "dos")
-        newmod.save()
-         '''       
+
 
 		       #Check ARP Poison status
         command = "ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'"

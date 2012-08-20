@@ -113,7 +113,12 @@ $(document).ready(function() {
         //select all the a tags named startpwn
     $('a[name=startpwn]').click(function(e) {
     
-    var auto = "{{ conf }}"
+    {% if setup %}
+      {% for settings in setup %}
+	var auto = "{{ settings.autoconf }}"
+      {% endfor %}
+    {% endif %}
+
           //Auto Configure and Run
     if (auto == "yes")
     {

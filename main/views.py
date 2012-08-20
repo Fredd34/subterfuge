@@ -52,15 +52,13 @@ def index(request):
       else:
 	      status = "off"
 
-	
-	      # Read in subterfuge.conf
-      with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r') as file:
-         conf = file.readlines()
-         
+         #Get Current Settings from DB
+      settings = setup.objects.all()
+               
 	      #Relay Template Variables
       return render_to_response("home.ext", {
 	      "status"    :   status,
-	      "conf"      :   str(conf[20]).rstrip('\n'),
+              "setup"     :   settings,
       })
         
         
@@ -126,6 +124,7 @@ def netview(request):
         modules = installed.objects.all()
         client  = iptrack.objects.exclude(id = "1").all()
         scanout = scan.objects.all()
+
         
            #Relay Template Variables
         return render_to_response("includes/netview.inc", {
@@ -154,6 +153,9 @@ def netview(request):
         modules = installed.objects.all()
         client  = iptrack.objects.exclude(id = "1").all()
         scanout = scan.objects.all()
+
+            #Get Current Settings from DB
+        settings = setup.objects.all()
         
            #Relay Template Variables
         return render_to_response("netview.ext", {
@@ -162,6 +164,7 @@ def netview(request):
             "client"    :   client,
             "scan"      :   scanout,
             "status"	:   status,
+            "setup"	:   settings,
         }) 
         
 

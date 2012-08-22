@@ -1,4 +1,4 @@
-# Django settings for harvester project.
+# Django settings for the Subterfuge Project.
 import os
 
 DEBUG = True

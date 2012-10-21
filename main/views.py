@@ -281,8 +281,7 @@ def conf(request, module):
       os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'update.py')
 
    if module == "exportcreds":
-      print 'python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'modules/harvester/exportcreds.py'
-      os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'modules/harvester/exportcreds.py')
+      os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'exportcreds.py')
 
       #################################
       #Subterfuge Module Configurations

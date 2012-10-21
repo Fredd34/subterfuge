@@ -90,7 +90,7 @@
         </tr>
         </table>
         </fieldset>   
-    <a href = "javascript: setmitm()" name = "apply"><div id = "redbutton" style = "margin-top: 30px;">Apply</div></a>
+    <a href = "javascript: setmitm()" name = "apply"><div id = "redbutton" style = "margin-top: 10px;">Apply</div></a>
     </fieldset>
     <script type = "text/javascript">
     function setmitm()

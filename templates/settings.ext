@@ -22,17 +22,26 @@
     <fieldset class = "menu">
     <legend><h2><a name="MITM" id="MITM">Subterfuge Configuration Menu:</a></h2></legend>
         <br>
-        <fieldset class = "reset"><legend>&nbsp;Reset&nbsp;</legend>
+        <fieldset class = "reset" style = "float:left"><legend>&nbsp;Reset&nbsp;</legend>
             <div id = "resetbox">
                 Clear captured credentials from the database:    <a href = "#" name = "reset"><div id = "redbutton">Purge Data</div></a>
+ 					<a href = "javascript: exportcreds()" name = "update" style = "float: left"><div id = "redbutton">Export Data</div></a>
+            </div>
+
+        </fieldset>
+
+        <fieldset class = "reset" style = "float:left"><legend>&nbsp;Update&nbsp;</legend>
+            <div id = "setctrlbox">
+                Check for updates on the SVN:<a href = "javascript: update()" name = "update"><div id = "redbutton">Update</div></a>
             </div>
         </fieldset>
         
-		  <a href = "javascript: update()" name = "update"><div id = "redbutton">Update</div></a>
+		  
 
 		  
         <form name = "mitmform" method = "post" action = "/config/settings/">
           
+	<br><br><br><br>
         <fieldset class = "generalsettings">
     
         <legend>&nbsp;General Settings&nbsp;</legend>
@@ -111,6 +120,13 @@
     {
       initiating();
 	$.post("/config/update/", {
+	      update:	     "yes"
+	});
+    }
+    function exportcreds()
+    {
+      initiating();
+	$.post("/config/exportcreds/", {
 	      update:	     "yes"
 	});
     }

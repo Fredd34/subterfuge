@@ -225,6 +225,12 @@ a
         background-color:#000;
         display:none;
     }
+
+    #setctrlbox
+    {
+        width: 250px;
+        height: 65px;
+    }
     
     #resetbox
     {

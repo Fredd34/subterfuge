@@ -354,8 +354,11 @@ def settings(request):
            f = os.popen("ifconfig " + interface + " | grep \"inet addr\" | sed -e \'s/.*addr://;s/ .*//\'")
            temp2 = ''
            temp3 = ''
-           temp = f.readline().rstrip('\n')
-           temp2 = re.findall(r'\d*.\d*.\d*.', temp)
+           try:
+		        temp = f.readline().rstrip('\n')
+		        temp2 = re.findall(r'\d*.\d*.\d*.', temp)
+           except:
+              "No default gw on " + interface
            if not temp2:
               print "No default gw on " + interface
            else:

@@ -100,19 +100,19 @@
       if (document.getElementById('mgw').value == "")
       {
 	$.post("/config/settings/", {
-	      iface:	   document.getElementById('iface').value,
-	      agw:	     	document.getElementById('agw').value,		
-	      auto:	      document.getElementById('auto').value,
-	      single:	   document.getElementById('single').value
+	      iface:	document.getElementById('iface').value,
+	      agw:	document.getElementById('agw').value,		
+	      auto:	document.getElementById('auto').value,
+	      single:	document.getElementById('single').value
 	});
       }
       else
       {
 	$.post("/config/settings/", {
-	      iface:	   document.getElementById('iface').value,
-	      mgw:	      document.getElementById('mgw').value,		
-	      auto:	      document.getElementById('auto').value,
-	      single:	   document.getElementById('single').value
+	      iface:	document.getElementById('iface').value,
+	      mgw:	document.getElementById('mgw').value,		
+	      auto:	document.getElementById('auto').value,
+	      single:	document.getElementById('single').value
 	});
       }
 
@@ -160,7 +160,7 @@
                            max: 60,
                            value: {% for settings in setup %}{{ settings.ploadrate }}{% endfor %},
                            slide: function( event, ui ) {
-                               newValue = ui.value + " secs";
+                               newValue = ui.value;
                                document.getElementById("ploadrate").innerHTML=newValue
                            }
                        });
@@ -168,8 +168,8 @@
                </script>
 
                <div id="range1"></div>
-               <span id = "ploadrate" style="border: 0; color: #f6931f; font-weight: bold;" >
-               {% for settings in setup %}{{ settings.ploadrate }}{% endfor %} secs
+               <span style="border: 0; color: #f6931f; font-weight: bold;" >
+               <span id = "ploadrate">{% for settings in setup %}{{ settings.ploadrate }}{% endfor %}</span> secs
                </span>         
             </td>
 		      </tr>
@@ -185,7 +185,7 @@
                            max: 30,
                            value: {% for settings in setup %}{{ settings.injectrate }}{% endfor %},
                            slide: function( event, ui ) {
-                               newValue = ui.value + " secs";
+                               newValue = ui.value;
                                document.getElementById("injectrate").innerHTML=newValue
                            }
                        });
@@ -193,8 +193,8 @@
                </script>
 
                <div id="range2"></div>
-               <span id = "injectrate" style="border: 0; color: #f6931f; font-weight: bold;" >
-               {% for settings in setup %}{{ settings.injectrate }}{% endfor %} secs
+               <span style="border: 0; color: #f6931f; font-weight: bold;" >
+               <span id = "injectrate">{% for settings in setup %}{{ settings.injectrate }}{% endfor %}</span> secs
                </span>
                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		      </td>
@@ -220,7 +220,7 @@
                         max: 30,
                         value: {% for settings in setup %}{{ settings.arprate }}{% endfor %},
                         slide: function( event, ui ) {
-                            newValue = ui.value + " secs";
+                            newValue = ui.value;
                             document.getElementById("arprate").innerHTML=newValue
                         }
                     });
@@ -228,8 +228,8 @@
             </script>
 
             <div id="range3"></div>
-            <span id = "arprate" style="border: 0; color: #f6931f; font-weight: bold;" >
-            {% for settings in setup %}{{ settings.arprate }}{% endfor %} secs
+            <span style="border: 0; color: #f6931f; font-weight: bold;" >
+            <span id ="arprate">{% for settings in setup %}{{ settings.arprate }}{% endfor %}</span> secs
             </span>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		   </td>
@@ -246,10 +246,10 @@
 	{
 	  initiating();
 	  $.post("/config/settings/", {
-	      ploadrate	:	document.getElementById('ploadrate').innerText,
-	      injectrate  :	document.getElementById('injectrate').value,
+	      ploadrate	   :	document.getElementById('ploadrate').innerHTML,
+	      injectrate   :	document.getElementById('injectrate').innerHTML,
 	      smartarp	   :	document.getElementById('smartarp').value,
-	      arprate	   :	document.getElementById('arprate').value
+	      arprate	   :	document.getElementById('arprate').innerHTML
 	});
 	}
 	function showValue(newValue, id)

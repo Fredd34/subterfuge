@@ -14,7 +14,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/settings.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/domtab.css" />
-<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css" />
  
 <!--	jQuery	-->
 <script type="text/javascript" src="/static/js/jquery.js"></script><!-- jQuery -->
@@ -33,13 +33,14 @@ function initiating()
 
 <script type="text/javascript">
 	//Auto Refresh Loads
+var pLoadRate = {% for settings in setup %}{{ settings.ploadrate }}{% endfor %} + "000";
 var auto_refresh = setInterval(
 function ()
 {
 $('#creds').load('/').fadeIn("slow");
 $('#hostcheck').load('/hostcheck/').fadeIn("slow");
 
-}, 1000);
+}, pLoadRate);
 </script>
 
 <script type="text/javascript">

@@ -6,6 +6,17 @@ import time
 import os
 import re
 import sys
+sys.path.append('/usr/share/subterfuge')
+
+from django.conf import settings
+settings.configure(DATABASE_ENGINE="sqlite3",
+                   DATABASE_HOST="",
+                   DATABASE_NAME= os.path.dirname(os.path.abspath(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "db",
+                   DATABASE_USER="",
+                   DATABASE_PASSWORD="")
+
+from django.db import models
+from main.models import *
 
 def main():
 
@@ -38,7 +49,9 @@ def poisonall(gateway):
 	try:
 	   mac = re.search(r"(([a-f\d]{1,2}\:){5}[a-f\d]{1,2})", temp).groups()[0]
 	   os.system("arp -s " + gateway + " " + mac)
-	   os.system("echo " + mac + " > " + os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")
+	   setup.objects.update(routermac = mac)
+	   os.system("rm " + os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")
+	   #os.system("echo " + mac + " > " + os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")
 	   time.sleep(.5)
 	   packet = ARP()
 	   packet.op = 2
@@ -63,9 +76,16 @@ def rearp(gateway):
 	packet = ARP()
 	packet.op = 2
 	#check if files exist first
-	if (os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")):
-		f = open(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt", 'r')
-		mac = f.readline()
+	#Get Globals from Database
+	for settings in setup.objects.all():
+		interface     = settings.iface
+		gateway       = settings.gateway
+		attackerip    = settings.ip
+		routermac     = settings.routermac
+		smartarp      = settings.smartarp
+		
+	try:
+		mac = routermac
 		macaddr = mac.rstrip("\n")
 		packet.hwsrc = macaddr
 		packet.psrc = gateway
@@ -78,9 +98,10 @@ def rearp(gateway):
 	   		send(packet, verbose=0)
 	   		time.sleep(1)
 	   		send(packet, verbose=0)
-		print 'Network Re-ARP Completed'
-	else:
-		print 'Router MAC address could not be found. Re-ARPing failed.'
+		print 'Network Re-ARP Complete'
+		
+	except:
+		print 'An error occured. Re-ARPing the network failed.'
 		
 if __name__ == '__main__':
 	main()

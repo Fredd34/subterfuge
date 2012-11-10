@@ -24,17 +24,10 @@ def attack(method):
             #Begin Attack Setup
             #Start Up MITM
         os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
-
-            #Get & Log Router Mac
-        if (os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/utilities/arpmitm.txt")):
-            f = open(os.path.dirname(os.path.abspath(__file__)) + "/utilities/arpmitm.txt", 'r')
-            mac = f.readline()
-            macaddr = mac.rstrip("\n")
-            setup.objects.update(routermac = macaddr)
             
-                #Check for ARPWatch
-            if (smartarp == "yes"):
-                os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
+             #Check for ARPWatch
+        if (smartarp == "yes"):
+             os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
             
         else:
             print "Encountered an error configuring arpwatch: Router MAC Address Unknown. Terminating..."

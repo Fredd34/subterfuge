@@ -6,8 +6,9 @@
 <img src="/static/images/configbg.png" alt="background image" id="bg" />
     </bg>
     -->
+    
 
-
+    
 <div class="domtab">
         <div id="dialog" class="window">
             <font color = "white"></font><img style = "padding: 10px" src = "/static/images/loader.gif">
@@ -99,19 +100,19 @@
       if (document.getElementById('mgw').value == "")
       {
 	$.post("/config/settings/", {
-	      iface:	     document.getElementById('iface').value,
-	      agw:	     document.getElementById('agw').value,		
-	      auto:	     document.getElementById('auto').value,
-	      single:	     document.getElementById('single').value
+	      iface:	   document.getElementById('iface').value,
+	      agw:	     	document.getElementById('agw').value,		
+	      auto:	      document.getElementById('auto').value,
+	      single:	   document.getElementById('single').value
 	});
       }
       else
       {
 	$.post("/config/settings/", {
-	      iface:	     document.getElementById('iface').value,
-	      mgw:	     document.getElementById('mgw').value,		
-	      auto:	     document.getElementById('auto').value,
-	      single:	     document.getElementById('single').value
+	      iface:	   document.getElementById('iface').value,
+	      mgw:	      document.getElementById('mgw').value,		
+	      auto:	      document.getElementById('auto').value,
+	      single:	   document.getElementById('single').value
 	});
       }
 
@@ -146,34 +147,96 @@
         <br>
 	<form name = "configform" method = "post" action = "/config/settings/">
         <fieldset class = "speedctrl"><legend>&nbsp;Refresh Rates&nbsp;</legend>
-            <div id = "resetbox">
-		<table>
-		<tr>
-		<td>Page Reload Rate:</td>
-		<td><input type="range" min="0" max="50" id = "ploadrate" value="{% for settings in setup %}{{ settings.ploadrate }}{% endfor %}" onchange="showValue(this.value, 'range1')" /><span id="range1">{% for settings in setup %}{{ settings.ploadrate }} secs{% endfor %}</span></td>
-		</tr>
-		<tr>
-		<tr>
-		<td>Injection Rate:</td>
-		<td><input type="range" min="0" max="50" id = "injectrate" value="{% for settings in setup %}{{ settings.injectrate }}{% endfor %}" onchange="showValue(this.value, 'range3')" /><span id="range3">{% for settings in setup %}{{ settings.injectrate }} secs{% endfor %}</span></td>
-		</tr>
-		</table>
-		<br>
-            </div>
+          <div id = "speedbox">
+		      <table>
+		      <tr>
+		      <td>Page Reload Rate:</td>
+		      <td>
+               <script>
+                   $(function() {
+                       $("#range1").slider({
+                           range: "max",
+                           min: 1,
+                           max: 60,
+                           value: {% for settings in setup %}{{ settings.ploadrate }}{% endfor %},
+                           slide: function( event, ui ) {
+                               newValue = ui.value + " secs";
+                               document.getElementById("ploadrate").innerHTML=newValue
+                           }
+                       });
+                   });
+               </script>
+
+               <div id="range1"></div>
+               <span id = "ploadrate" style="border: 0; color: #f6931f; font-weight: bold;" >
+               {% for settings in setup %}{{ settings.ploadrate }}{% endfor %} secs
+               </span>         
+            </td>
+		      </tr>
+		      <tr>
+		      <tr>
+		      <td>Injection Rate:</td>
+		      <td>
+		         <script>
+                   $(function() {
+                       $("#range2").slider({
+                           range: "max",
+                           min: 1,
+                           max: 30,
+                           value: {% for settings in setup %}{{ settings.injectrate }}{% endfor %},
+                           slide: function( event, ui ) {
+                               newValue = ui.value + " secs";
+                               document.getElementById("injectrate").innerHTML=newValue
+                           }
+                       });
+                   });
+               </script>
+
+               <div id="range2"></div>
+               <span id = "injectrate" style="border: 0; color: #f6931f; font-weight: bold;" >
+               {% for settings in setup %}{{ settings.injectrate }}{% endfor %} secs
+               </span>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		      </td>
+		      </tr>
+		      </table>
+		      <br>
+     </div>
 	</fieldset>
-        <fieldset class = "speedctrl"><legend>&nbsp;ARP Controls&nbsp;</legend>
-            <div id = "resetbox">
-		<table>
-		<tr>
-		<td>Dynamic Retention:</td>
-		<td><input type = "checkbox" id = "smartarp" {% for settings in setup %}{% if settings.smartarp|length > 2 %} checked = "checked" {% endif %}{% endfor %}/></td>
-		</tr>
-		<td>ARP Poison Speed:</td>
-		<td><input type="range" min="0" max="50" id = "arprate" value="{% for settings in setup %}{{ settings.arprate }}{% endfor %}" onchange="showValue(this.value, 'range2')" /><span id="range2">{% for settings in setup %}{{ settings.arprate }} secs{% endfor %}</span></td>
-		</tr>
-		</table>
-		<br>
-            </div>
+   <fieldset class = "speedctrl"><legend>&nbsp;ARP Controls&nbsp;</legend>
+     <div id = "speedbox">
+		   <table>
+		   <tr>
+		   <td>Dynamic Retention:</td><!-- DOESN'T DO ANYTHING LOL -->
+		   <td><input type = "checkbox" id = "smartarp" {% for settings in setup %}{% if settings.smartarp|length > 2 %} checked = "checked" {% endif %}{% endfor %}/></td>
+		   </tr>
+		   <td>ARP Poison Speed:</td>
+		   <td>
+		      <script>
+                $(function() {
+                    $("#range3").slider({
+                        range: "max",
+                        min: 1,
+                        max: 30,
+                        value: {% for settings in setup %}{{ settings.arprate }}{% endfor %},
+                        slide: function( event, ui ) {
+                            newValue = ui.value + " secs";
+                            document.getElementById("arprate").innerHTML=newValue
+                        }
+                    });
+                });
+            </script>
+
+            <div id="range3"></div>
+            <span id = "arprate" style="border: 0; color: #f6931f; font-weight: bold;" >
+            {% for settings in setup %}{{ settings.arprate }}{% endfor %} secs
+            </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		   </td>
+		   </tr>
+		   </table>
+		   <br>
+     </div>
 	</fieldset>
 	<a href = "javascript: setconfig()" name = "apply"><div id = "redbutton" style = "margin-top: 125px;">Apply</div></a>
 	</fieldset>
@@ -183,10 +246,10 @@
 	{
 	  initiating();
 	  $.post("/config/settings/", {
-	      ploadrate	:	document.getElementById('ploadrate').value,
-	      injectrate:	document.getElementById('injectrate').value,
-	      smartarp	:	document.getElementById('smartarp').value,
-	      arprate	:	document.getElementById('arprate').value
+	      ploadrate	:	document.getElementById('ploadrate').innerText,
+	      injectrate  :	document.getElementById('injectrate').value,
+	      smartarp	   :	document.getElementById('smartarp').value,
+	      arprate	   :	document.getElementById('arprate').value
 	});
 	}
 	function showValue(newValue, id)

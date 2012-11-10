@@ -14,9 +14,11 @@
 <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/settings.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/domtab.css" />
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
  
 <!--	jQuery	-->
 <script type="text/javascript" src="/static/js/jquery.js"></script><!-- jQuery -->
+<script type="text/javascript" src="/static/js/jquery-ui.js"></script><!-- jQuery-UI -->
 <script type="text/javascript" src="/static/js/domtab.js"></script><!-- Configuration Menu-->
 
 

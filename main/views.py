@@ -1,4 +1,7 @@
 import os
+  #Ignore Deprication Warnings
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
     #Django Web Modules
 from django.template import Context, loader
 from django.http import HttpResponse

@@ -22,5 +22,5 @@ def cease():
 		smartarp      = settings.smartarp
 	
 		#ReARP The Network
-	os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'utilities/arpmitm.py -r ' + gateway + ' &')
+	os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'utilities/rearp.py -r ' + gateway + ' &')
 

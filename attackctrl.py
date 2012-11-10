@@ -1,6 +1,10 @@
 import os
 import re
 import sys
+  #Ignore Deprication Warnings
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
+    
 from django.conf import settings
 settings.configure(DATABASE_ENGINE="sqlite3",
                    DATABASE_HOST="",
@@ -10,6 +14,7 @@ settings.configure(DATABASE_ENGINE="sqlite3",
 
 from django.db import models
 from main.models import *
+
 
 def attack(method):
     print "Starting Pwn Ops..."

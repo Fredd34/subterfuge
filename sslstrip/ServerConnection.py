@@ -17,6 +17,9 @@
 #
 
 import logging, re, string, random, zlib, gzip, StringIO, os
+  #Ignore Deprication Warnings
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
 
 #Subterfuge Database Models
 from django.conf import settings

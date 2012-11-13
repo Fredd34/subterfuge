@@ -16,6 +16,7 @@ class setup(models.Model):
     arprate     = models.CharField(max_length=300)
     smartarp    = models.CharField(max_length=300)
     routermac   = models.CharField(max_length=300)
+    autoupdate  = models.CharField(max_length=300)
    
 class progdirs(models.Model):
     nmap        = models.CharField(max_length=300)

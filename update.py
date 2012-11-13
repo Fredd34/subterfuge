@@ -27,7 +27,7 @@ for settings in setup.objects.all():
 def main():
 	print "Updating Subterfuge..."
 		#Build Revision
-	os.system('svn update /usr/share/subterfuge > /dev/null')
+	os.system('svn update /usr/share/subterfuge')
 
 		#Versioning Management
         info = os.popen('svn info /usr/share/subterfuge')

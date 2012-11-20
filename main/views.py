@@ -228,7 +228,7 @@ def conf(request, module):
          pass
       
       try:
-         if request.POST["auto"] == "on":
+         if request.POST["auto"] == "true":
             setup.objects.update(autoconf = "yes")
             conf[20] = "yes" + "\n"
             print "Auto Configure  => yes"

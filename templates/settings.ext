@@ -99,37 +99,37 @@
       initiating();
       if (document.getElementById('mgw').value == "")
       {
-	$.post("/config/settings/", {
-	      iface:	document.getElementById('iface').value,
-	      agw:	document.getElementById('agw').value,		
-	      auto:	document.getElementById('auto').value,
-	      single:	document.getElementById('single').value
-	});
+         $.post("/config/settings/", {
+               iface:	document.getElementById('iface').value,
+               agw:	   document.getElementById('agw').value,
+               auto:	   document.getElementById('auto').checked,
+               single:	document.getElementById('single').value
+         });
       }
       else
       {
-	$.post("/config/settings/", {
-	      iface:	document.getElementById('iface').value,
-	      mgw:	document.getElementById('mgw').value,		
-	      auto:	document.getElementById('auto').value,
-	      single:	document.getElementById('single').value
-	});
+	      $.post("/config/settings/", {
+	            iface:	document.getElementById('iface').value,
+	            mgw:	   document.getElementById('mgw').value,		
+	            auto:	   document.getElementById('auto').checked,
+	            single:	document.getElementById('single').value
+	      });
       }
 
     }
     function update()
     {
       initiating();
-	$.post("/config/update/", {
-	      update:	     "yes"
-	});
+	   $.post("/config/update/", {
+	         update:	     "yes"
+	   });
     }
     function exportcreds()
     {
       initiating();
-	$.post("/config/exportcreds/", {
-	      update:	     "yes"
-	});
+	   $.post("/config/exportcreds/", {
+	         update:	     "yes"
+	   });
     }
     </script>
     </form>

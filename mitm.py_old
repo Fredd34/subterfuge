@@ -6,7 +6,6 @@ import time
 import datetime
 import urllib
 
-"""
   #Ignore Deprication Warnings
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
@@ -20,7 +19,13 @@ settings.configure(DATABASE_ENGINE="sqlite3",
 
 from django.db import models
 from main.models import *
-"""
+
+
+	#Get Globals from Database
+for settings in setup.objects.all():
+	interface     = settings.iface
+	gateway       = settings.gateway
+
 try:
 
 	def main():
@@ -95,7 +100,6 @@ try:
 	
 	#Edits logs to gather credentials
 	def harvest():
-		print "Harvesting Credentials..."
 
 		#Read in username fields from definitions file
 		u = open(os.path.dirname(__file__) + '/definitions/usernamefields.lst', 'r')

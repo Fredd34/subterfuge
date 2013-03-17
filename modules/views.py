@@ -17,17 +17,6 @@ from subterfuge.cease.views import *
 from subterfuge.modules.views import *
 
 
-def globalvars():
-   # Read in subterfuge.conf and Establish Global Variables
-   with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r') as file:
-      conf = file.readlines()
-      
-   iface    = conf[15]
-   gate     = conf[17]
-   autoconf = conf[20]
-   msfdir   = conf[34]
-
-
    # Subterfuge Module Builder
 def build(request, modname, description):
 
@@ -153,11 +142,26 @@ def httpcodeinjection(request, conf):
    installed.objects.filter(name = "httpcodeinjection").update(active = status)
    
    os.system('xterm -e sh -c "python ' + str(os.path.dirname(os.path.abspath(__file__))) + '/httpcodeinjection/httpcodeinjection.py ' + method + ' ' + payload + '" &') 
+  
    
       #################################
       #TUNNEL BLOCK MODULE
       #################################
 
 def tunnelblock():
-   os.system('python ' + str(os.path.dirname(os.path.abspath(__file__))) + '/TunnelBlock/TunnelBlock.py')
+	os.system('python ' + str(os.path.dirname(os.path.abspath(__file__))) + '/TunnelBlock/TunnelBlock.py')
 
+
+      #################################
+      #WPAD Hijacking
+      #################################
+      
+def wpad(request): 
+	   # Read in subterfuge.conf
+   with open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r') as file:
+      conf = file.readlines()
+      
+	   #Relay Template Variables
+   return render_to_response("wpad.dat", {
+	   "na"  :   "na"
+   })  

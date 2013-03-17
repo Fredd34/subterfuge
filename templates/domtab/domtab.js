@@ -38,7 +38,7 @@ domtab={
 			var newlink=document.createElement('a');
 			newlink.setAttribute('href','#');
 			domtab.addEvent(newlink,'click',domtab.showAll,false);
-			newlink.onclick=function(){return false;} // safari hack
+			newlink.onclick=function(){return false;} 
 			newlink.appendChild(document.createTextNode(domtab.showAllLinkText));
 			document.getElementById(domtab.printID).appendChild(newlink);
 		}
@@ -99,7 +99,7 @@ domtab={
 			if(i==sections.length-1){
 				temp.removeChild(temp.getElementsByTagName('li')[1]);
 			}
-			temp.i=i; // h4xx0r!
+			temp.i=i; 
 			temp.menu=menu;
 			sections[i].appendChild(temp);
 		}
@@ -143,7 +143,6 @@ domtab={
 		}
 	},
 	createPrevNext:function(){
-		// this would be so much easier with innerHTML, darn you standards fetish!
 		var temp=document.createElement('ul');
 		temp.className=domtab.prevNextClass;
 		temp.appendChild(document.createElement('li'));

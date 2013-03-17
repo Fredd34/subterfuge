@@ -74,7 +74,7 @@ function hostcount()
             hostHTML +='               <td>';
             hostHTML +='                  ';
             hostHTML +='               </td>';
-            hostHTML +='               <td>';
+            hostHTML +='               <td id = "scanindicator' + hostid + '">';
             hostHTML +='               </td>';
             hostHTML +='            </tr>';
             hostHTML +='         </table>';
@@ -114,7 +114,7 @@ function hostcount()
             hostHTML +='               <td>';
             hostHTML +='                  ';
             hostHTML +='               </td>';
-            hostHTML +='               <td>';
+            hostHTML +='               <td id = "scanindicator' + hostid + '">';
             hostHTML +='               </td>';
             hostHTML +='            </tr>';
             hostHTML +='         </table>';
@@ -175,15 +175,24 @@ function update()
             document.getElementById('macs{{ forloop.counter }}').innerHTML = mac;
             document.getElementById('mace{{ forloop.counter }}').innerHTML = mac;
             
+            
                //Get Scan Results
             {% for result in scan %}
                var ports{{ forloop.counter }} = new Array();
                   {% for port in result.ports|joinby %}
                       ports{{ forloop.parentloop.counter }}[{{ forloop.counter }}] = "{{ port }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                   {% endfor %}
+                  {% if result.address == host.address %}
+                     {% if result.scanning == "1" %}
+                        scanindicator = '<img src = "/static/images/activity.gif">'
+                     {% else %}
+                        scanindicator = ''
+                     {% endif %}
+                  {% endif %}
              {% endfor %}
 
                //Update Scan Results
+            document.getElementById('scanindicator{{ forloop.counter }}').innerHTML = scanindicator;
             document.getElementById('ports{{ forloop.counter }}').innerHTML = "";             
             for (var i = 0; i < ports{{ forloop.counter }}.length; i++)
             {
@@ -195,6 +204,34 @@ function update()
 
          {% endfor %}
       {% endif %}
+   }
+   
+   //Determine if Notification
+function notificationcheck()
+   {
+         //Check for new Notification
+      {% if alerts %}
+         {% for notification in alerts %}
+            status = "{{ notification.status }}";
+
+               //If Notification Display it
+            if (status == "new")
+            {
+                  notificationshow("{{ notification.title }}", "{{ notification.message }}");
+                  setTimeout(notificationhide, 5000);
+            }
+         {% endfor %}
+      {% endif %}
+   }
+function notificationshow(title, message)
+   {
+      document.getElementById('notificationboxtitle').innerHTML = title;
+      document.getElementById('notificationboxmessage').innerHTML = message;
+      $("#notificationbox").show("slide", { direction: "right" });
+   }
+function notificationhide()
+   {
+      $("#notificationbox").hide("slide", { direction: "right" });
    }
 
 function loading()
@@ -269,8 +306,10 @@ function httpcodeinjection()
 
 {% endif %}
 
+   notificationcheck();
    hostcount();
    update();
+   
 
 
 </script>

@@ -1,4 +1,6 @@
 import os
+import sys
+sys.path.append('/usr/share/subterfuge/utilities')
   #Ignore Deprication Warnings
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
@@ -12,6 +14,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 from django.template import RequestContext
+from django import forms
+
     #Database Models
 from subterfuge.main.models import *
 from subterfuge.modules.models import *
@@ -19,49 +23,76 @@ from subterfuge.modules.models import *
 from subterfuge.cease.views import *
 from subterfuge.modules.views import *
 
+from subfunctions import statuscheck
+
 
 @csrf_protect
 @never_cache
 def index(request):
    if request.is_ajax():
-	 #Get Creds from DB
+    #Get Creds from DB
       creds = credentials.objects.all()
-
+   
          #Reset Injection Counter
       iptrack.objects.update(injected = "0")
-
-	 #Check Arpspoof status
-      command = "ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'"
-      a = os.popen(command)
-      reply = a.read()
-      if(len(reply)>1):
-	      status = "on"
-      else:
-	      status = "off"
-	
+   
+    #Check Arpspoof status
+      status = statuscheck()
+   
          
-	      #Relay Template Variables
+         #Relay Template Variables
       return render_to_response("includes/credtable.inc", {
-	      "credential"    :   creds,
-	      "status"	      :	  status,
+         "credential"    :   creds,
+         "status"	      :	  status,
       })
    else:            
-	      #Check Arpspoof status
-      command = "ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'"
-      a = os.popen(command)
-      reply = a.read()
-      if(len(reply)>1):
-	      status = "on"
-      else:
-	      status = "off"
-
+         #Check Attack status
+      status = statuscheck()
+   
+   
          #Get Current Settings from DB
       settings = setup.objects.all()
                
-	      #Relay Template Variables
+         #Relay Template Variables
       return render_to_response("home.ext", {
-	      "status"    :   status,
+         "status"    :   status,
               "setup"     :   settings,
+      })
+
+
+def notifications(request):
+   if request.is_ajax():
+    #Get Creds from DB
+      creds = credentials.objects.all()
+   
+         #Reset Injection Counter
+      iptrack.objects.update(injected = "0")
+   
+    #Check Arpspoof status
+      status = statuscheck()
+   
+      alerts   = notification.objects.all()
+
+      
+         
+         #Relay Template Variables
+      return render_to_response("includes/notificationtable.inc", {
+         "credential"   :   creds,
+         "status"	      :	 status,
+         "alerts"	      :   alerts
+      })
+   else:            
+         #Check Attack status
+      status = statuscheck()
+   
+         #Get Current Settings from DB
+      settings = setup.objects.all()
+       
+               
+         #Relay Template Variables
+      return render_to_response("notifications.ext", {
+         "status"    :   status,
+         "setup"     :   settings
       })
         
         
@@ -99,14 +130,20 @@ def hostcheck(request):
         modules = installed.objects.all()
         client  = iptrack.objects.exclude(id = "1").all()
         scanout = scan.objects.all()
-        
+        alerts   = notification.objects.all()
+        for data in alerts:
+         pass
+        notification.objects.update(status = "old")
+   
+
            #Relay Template Variables
         return render_to_response("includes/hostcheck.inc", {
             "config"    :   config,
             "modules"   :   modules,
             "client"    :   client,
             "scan"      :   scanout,
-            "status"	:   status,
+            "status"	   :   status,
+            "alerts"	   :   alerts
         })        
         
 def netview(request):
@@ -176,7 +213,7 @@ def netctrl(request, cmd):
 
         if cmd == "scan":
             address = request.POST["target"]
-            os.system("python " + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "scan.py " + address + " &")
+            os.system("python " + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + "utilities/scan.py " + address + " &")
 
         if cmd == "expand":
             iptrack.objects.filter(address = request.POST["address"]).update(expand = "1")
@@ -278,6 +315,52 @@ def conf(request, module):
          setup.objects.update(arprate = request.POST["arprate"])
       except:
          pass
+      
+      
+         #Vectors
+      try:
+         if request.POST["active"] == "true":
+            vectors.objects.filter(name = request.POST["vector"]).update(active = "yes")
+         else:
+            vectors.objects.filter(name = request.POST["vector"]).update(active = "no")
+            
+            
+            #Wireless AP Generator Settings
+         if request.POST["vector"] == "Wireless AP Generator":
+            apgen.objects.update(essid = request.POST["essid"])
+            apgen.objects.update(channel = request.POST["channel"])
+            apgen.objects.update(atknic = request.POST["atknic"])
+            apgen.objects.update(netnic = request.POST["netnic"])
+      except:
+         pass
+         
+         
+         #Advanced
+      try:
+         scanip = request.POST["scantargetip"]
+         print "Importing Nmap scan for: " + scanip
+         
+            #Get/Write Files
+         if request.FILES['scanresults']:
+            scanresults = request.FILES['scanresults']
+            dest = open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'utilities/scans/' + scanip + '.xml', 'wb+')
+            for chunk in scanresults.chunks():
+               dest.write(chunk)
+            dest.close()
+               #Execute Scan
+            os.system('python ' + str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'utilities/scan.py ' + scanip)
+            
+               #Relay Template Variables
+         return render_to_response("settings.ext", {
+            "config"    :   config,
+            "conf"      :   str(config[20]).rstrip('\n'),
+            "iface"	   :   result,
+            "gateway"   :   gw,
+            "status"    :   status,
+            "setup"     :   currentsetup,
+         })    
+      except:
+         pass
          
 
    if module == "update":
@@ -320,10 +403,18 @@ def conf(request, module):
 	   status = "on"
    else:
 	   status = "off"
-	   #Relay Template Variables
-   return render_to_response(request.META['HTTP_REFERER'].split('/')[3] + ".ext", {
-	   "status"    :   status,
-   })
+   
+   if module == "httpinjection" or module == "tunnelblock":
+            #Relay Template Variables
+        modules = installed.objects.all()
+        return render_to_response("plugins.ext", {
+            "modules"   :   modules,
+        })
+   else:
+         #Relay Template Variables
+      return render_to_response(request.META['HTTP_REFERER'].split('/')[3] + ".ext", {
+         "status"    :   status,
+      })
         
 def settings(request):
     if request.is_ajax():
@@ -362,13 +453,17 @@ def settings(request):
 		        temp2 = re.findall(r'\d*.\d*.\d*.', temp)
            except:
               "No default gw on " + interface
-           if not temp2:
-              print "No default gw on " + interface
-           else:
-              gate = temp2[0] + '1'
-              gw.append(gate)
-              gw.remove('')
-              gw.reverse()
+           try: 
+              if not temp2:
+                 print "No default gw on " + interface
+              else:
+                 gate = temp2[0] + '1'
+                 gw.append(gate)
+                 gw.remove('')
+                 gw.reverse()
+           except:
+              print "Something went wrong when determining network gateway information"
+              os.system("python /usr/share/subterfuge/utilities/notification.py 'Gateway Error' 'Subterfuge was unable to detect a default gw on any of your interfaces. Sorry.'")
               
             #Read in Config File
       f = open(str(os.path.dirname(__file__)).rstrip("abcdefghijklmnnnopqrstruvwxyz") + 'subterfuge.conf', 'r')
@@ -386,15 +481,17 @@ def settings(request):
 
 
       currentsetup = setup.objects.all()
+      availablevectors = vectors.objects.all()
            
             #Relay Template Variables
       return render_to_response("settings.ext", {
             "config"    :   config,
             "conf"      :   str(config[20]).rstrip('\n'),
-            "iface"	:   result,
+            "iface"	   :   result,
             "gateway"   :   gw,
             "status"    :   status,
             "setup"     :   currentsetup,
+            "vectors"   :   availablevectors,
          })
 
   

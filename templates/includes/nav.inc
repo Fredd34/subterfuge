@@ -37,6 +37,10 @@
 
 </div></div>
 
+<!--    NOTIFICATIONS      -->
+    <div id = "notificationbox"><b><font color = "white"></font><div id = "notificationboxtitle"></div></b></font><div id = "notificationboxmessage"></div></div>
+<!--    END_NOTIFICATIONS  -->
+
 <!--    FOOTER      -->
     {% include "includes/footer.inc" %}
 <!--    END_FOOTER  -->

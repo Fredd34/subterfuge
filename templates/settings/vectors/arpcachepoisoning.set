@@ -1,0 +1,13 @@
+<div id = "ARPCachePoisoning">
+     <fieldset class = "reset" style = "float:left"><legend>&nbsp;Vector Settings&nbsp;</legend>
+             <div id = "setctrlbox">
+                <table>
+                <tr>
+                <td>Active:</td>
+                <td><input type = "checkbox" name = "ACPActive" id = "ACPActive" {% for vector in vectors %}{% if vector.name == "ARP Cache Poisoning" %}{% if vector.active|length > 2 %} checked = "checked" {% endif %}{% endif %}{% endfor %}/></td>
+                </tr>
+                </table>
+                <a href = "javascript: setVector()" name = "update"><div id = "redbutton">Apply</div></a>
+             </div>
+     </fieldset>
+</div>

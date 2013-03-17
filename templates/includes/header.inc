@@ -38,6 +38,7 @@ var auto_refresh = setInterval(
 function ()
 {
 $('#creds').load('/').fadeIn("slow");
+$('#notifications').load('/notifications/').fadeIn("slow");
 $('#hostcheck').load('/hostcheck/').fadeIn("slow");
 
 }, pLoadRate);
@@ -63,6 +64,10 @@ $(document).ready(function() {
 
 	$(document).ready(function () {
 	  $("#stoppwn").hide();
+	});
+	
+	$(document).ready(function () {
+	  $("#notificationbox").hide();
 	});
 
 	$(document).ready(function () {

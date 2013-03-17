@@ -10,6 +10,34 @@ a
     color: black;
 }
 
+        /* Notification Box */
+    #notificationbox
+    {
+        position: absolute;
+        background:url('/static/images/notify.png');
+        background-size: 100%;
+        top: 50px;
+        right: 0px;
+        float: right;
+        z-index: 3012;
+        width: 250px;
+        height: auto;
+        padding: 5px;
+        border: solid black 1px;
+        -khtml-border-radius: 4px 4px 4px 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        border-radius: 5px 5px 5px 5px;
+        -khtml-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 2px;
+        -ms-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 2px;
+        -o-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 2px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 2px;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 1px 2px;
+        box-shadow: rgba(5, 5, 5, 5) 0 1px 2px;
+    }
+
         /* NAVBAR */
     #navbar
     {

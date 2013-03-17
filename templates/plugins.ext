@@ -169,11 +169,11 @@ function showevilgradeconfig()
             
             
             <div id = "pluginconfigboxhijacking">
-                The session hijacking plugin will allow a user to masquerade as a victim within the session that was hijacked. This attack occurs by stealing the cookie used to authenticate into a web service.
+                The session hijacking plugin will allow a user to masquerade as a victim within the session that was hijacked. This attack occurs by stealing the cookie used to authenticate into a web service. (Coming Soon)
                 <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 385px; color: white;">Apply</div></a>
             </div>
             <div id = "pluginconfigboxevilgrade">
-                Evilgrade is a tool that allows a user to spoof an update server on the network. When a victim starts up a program such as iTunes it automatically looks to see if updates exist. Evilgrade steps into this process and sends the victim a malicious payload. Subterfuge will include a module that simplifies the process, and incorporates it into the framework.
+                Evilgrade is a tool that allows a user to spoof an update server on the network. When a victim starts up a program such as iTunes it automatically looks to see if updates exist. Evilgrade steps into this process and sends the victim a malicious payload. Subterfuge will include a module that simplifies the process, and incorporates it into the framework. (Coming Soon)
   
                 <a href = "#" name = "pset"><div id = "redbutton" style = "margin-top: 305px; color: white;">Apply</div></a>
             </div>

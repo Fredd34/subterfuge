@@ -15,6 +15,7 @@
         </div>
     <ul class="domtabs">
       <li><a href="#MITM">MITM Settings</a></li>
+      <li><a href="#Vectors">MITM Vectors</a></li>
       <li><a href="#Config">Configuration</a></li>
       <li><a href="#Advanced">Advanced</a></li>
     </ul>
@@ -137,7 +138,84 @@
   
   
 
+  <div id = "intab">
+    <fieldset class = "menu">
+    <legend><h2><a name="Vectors" id="Vectors">MITM Vectors</a></h2></legend>
+        <br>
+		
+        <table>
+        <tr>
+        <td>Interface:</td>
+        <td><select name = "vector" id = "vector" class = "vector" onchange = "vector(this.value)">
+        {% for vector in vectors %}
+        <option value = "{{ vector.name }}">{{ vector.name }}</option>
+        {% endfor %}
+        </select></td>
+        </tr>
+	</table>
+		  <!--        VECTOR SETTINGS        -->
+        {% include "settings/vectors/arpcachepoisoning.set" %}
+        {% include "settings/vectors/wirelessapgenerator.set" %}
+        {% include "settings/vectors/wpadhijack.set" %}
+        {% include "settings/vectors/roguedhcp.set" %}
+		  <!--        END_VECTOR SETTINGS     -->
+	
+	<script type="text/javascript">
+		hidevectors();
+		
+		function hidevectors() {
+			$('#ARPCachePoisoning').hide();
+			$('#WirelessAPGenerator').hide();
+			$('#WPADHijacking').hide();
+		   $('#RogueDHCP').hide();
+		}
+		
+		$('#ARPCachePoisoning').show();
+		
+		function vector(name) {
+			hidevectors();
+			name = name.split(" ").join("");
+			$('#' + name).show();
+		}
+		
+		function setVector() {
+		  initiating();
+					 //Get Vector
+		  method = document.getElementById('vector').value
+		  
+		  if (method == "ARP Cache Poisoning") {
+					 $.post("/config/settings/", {
+						  vector		   :	document.getElementById('vector').value,
+						  active		   :	document.getElementById('ACPActive').checked
+					 });
+		  }
+		  else if (method == "Wireless AP Generator") {
+					 $.post("/config/settings/", {
+						  vector		   :	document.getElementById('vector').value,
+						  active		   :	document.getElementById('APGenActive').checked,
+						  essid		   :	document.getElementById('essid').value,
+						  channel	   :	document.getElementById('channel').value,
+						  netnic		   :	document.getElementById('netnic').value,
+						  atknic		   :	document.getElementById('atknic').value
+					 });
+		  }
+		  else if (method == "WPAD Hijacking") {
+					 $.post("/config/settings/", {
+						  vector		   :	document.getElementById('vector').value,
+						  active		   :	document.getElementById('WPADActive').checked
+					 });
+		  }
+		  else if (method == "Rogue DHCP") {
+					 $.post("/config/settings/", {
+						  vector		   :	document.getElementById('vector').value,
+						  active		   :	document.getElementById('RogueDHCPActive').checked
+					 });
+		  }
+		}
+	</script>
 
+    </fieldset>
+  </div>
   
   
   
@@ -207,7 +285,7 @@
      <div id = "speedbox">
 		   <table>
 		   <tr>
-		   <td>Dynamic Retention:</td><!-- DOESN'T DO ANYTHING LOL -->
+		   <td>Dynamic Retention:</td>
 		   <td><input type = "checkbox" id = "smartarp" {% for settings in setup %}{% if settings.smartarp|length > 2 %} checked = "checked" {% endif %}{% endfor %}/></td>
 		   </tr>
 		   <td>ARP Poison Speed:</td>
@@ -260,9 +338,39 @@
 	</script>
     
   </div>
+  
+  
   <div id = "intab">
-    <h2><a name="Advanced" id="Advanced">Oh No More Settings...</a></h2>
-    <p>jk</p>
+    <fieldset class = "menu">
+    <legend><h2><a name="Advanced" id="Advanced">Advanced Options</a></h2></legend>
+        <br>
+
+        <fieldset class = "reset" style = "float:left; height: auto;"><legend>&nbsp;Import an Nmap Scan&nbsp;</legend>
+            <div id = "setctrlbox">
+                <form enctype = "multipart/form-data" name = "scanform" method = "post" action = "/config/settings/" >
+                <table>
+                 <tr>
+                 <td>IP:</td>
+                 <td><input type = "text" name = "scantargetip" id = "scantargetip" value = "x.x.x.x" /></td>
+                 </tr>
+                 <tr>
+                 <td>File:</td>
+                 <td><input type = "file" name = "scanresults" id = "scanresults"></td>
+                 </tr>
+                <table>
+                
+                <a href = "javascript: importscan()" name = "importscan"><div id = "redbutton">Import</div></a>
+                </form>
+            </div>
+        </fieldset>
+    </fieldset>
+	   <script type="text/javascript">
+	   
+	      function importscan()
+	      {
+	            document.scanform.submit();
+	      }
+	   </script>
   </div>
 </div>
 <div id = "invis">

@@ -35,7 +35,7 @@
                <td>
                   MAC:
                </td>
-               <td name = "macs{{ forloop.counter }}">
+               <td id = "macs{{ forloop.counter }}">
                   {{ host.mac }}
                </td>
             </tr>
@@ -43,8 +43,14 @@
                <td>
                 
                </td>
-               <td>
-                  
+               <td id = "scanindicator{{ forloop.counter }}">
+                  {% for result in scan %}
+                     {% if result.address == host.address %}
+                        {% if result.scanning == "1" %}
+                           <img src = "/static/images/activity.gif">
+                        {% endif %}
+                     {% endif %}
+                  {% endfor %}
                </td>
             </tr>
          </table>         
@@ -78,7 +84,7 @@
             <td>
                MAC:
             </td>
-            <td name = "mace{{ forloop.counter }}">
+            <td id = "mace{{ forloop.counter }}">
                {{ host.mac }}
             </td>
          </tr>
@@ -86,8 +92,14 @@
             <td>
                
             </td>
-            <td>
-               
+            <td id = "scanindicator{{ forloop.counter }}">
+               {% for result in scan %}
+                  {% if result.address == host.address %}
+                     {% if result.scanning == "1" %}
+                        <img src = "/static/images/activity.gif">
+                     {% endif %}
+                  {% endif %}
+               {% endfor %}
             </td>
          </tr>
       </table>         

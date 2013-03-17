@@ -2,8 +2,8 @@
 #It can be imported into another python program
 
 #Current Version Information
-major_release_version = 4
-minor_release_version = 3
-initial_revision_number = 73
-current_revision_number = 82
+major_release_version = 5
+minor_release_version = 0
+initial_revision_number = 83
+current_revision_number = 83
 

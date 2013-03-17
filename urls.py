@@ -5,6 +5,7 @@ urlpatterns = patterns('',
     url(r'^$', 'main.views.index', name='home'),
     url(r'^settings/', 'main.views.settings', name='settings'),
     url(r'^network/', 'main.views.networkviews', name='network view'),
+    url(r'^notifications/', 'main.views.notifications', name='Notification History'),
     url(r'^plugins/', 'main.views.plugins', name='plugins'),
     url(r'^hostcheck/', 'main.views.hostcheck', name='netview'),
     url(r'^netview/', 'main.views.netview', name='netview'),
@@ -20,5 +21,6 @@ urlpatterns = patterns('',
         #Modules
     url(r'^builder/', 'modules.views.builder', name='getgateway'),
     url(r'^create/', 'modules.views.create', name='getgateway'),
+    url(r'^wpad.dat', 'modules.views.wpad', name='WPAD'),
     
 )

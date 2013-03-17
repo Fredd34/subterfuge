@@ -22,3 +22,9 @@ class progdirs(models.Model):
     nmap        = models.CharField(max_length=300)
     metasploit  = models.CharField(max_length=300)
     evilgrade   = models.CharField(max_length=300)
+
+class notification(models.Model):
+    status      = models.CharField(max_length=300)
+    title       = models.CharField(max_length=300, default = 'Alert')
+    message     = models.CharField(max_length=300)
+    date        = models.CharField(max_length=300)

@@ -11,6 +11,8 @@ def cease():
 	os.system("kill -9 `ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
 	os.system("kill -9 `ps -A 1 | sed -e '/arpwatch/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
 	os.system("kill -9 `ps -A 1 | sed -e '/sslstrip/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
+	os.system("kill -9 `ps -A 1 | sed -e '/harvester/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
+	os.system("kill -9 `ps -A 1 | sed -e '/ftp_password_sniffer/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
 	time.sleep(1)
 	
 		#Get Globals from Database

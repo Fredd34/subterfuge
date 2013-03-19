@@ -25,6 +25,8 @@ from main.models import credentials
 
 def main():
 	print "Harvesting Credentials..."
+	print "Starting FTP Sniffer"
+	os.system("python /usr/share/subterfuge/modules/harvester/ftp_password_sniffer.py")
 
 	#Read in username fields from definitions file
 	u = open('/usr/share/subterfuge/definitions/usernamefields.lst', 'r')

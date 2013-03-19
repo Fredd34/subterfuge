@@ -8,9 +8,9 @@ from subterfuge.main.models import *
 def cease():
 	print 'Cleaning up...'
 	time.sleep(1)
-	os.system("kill -9 `ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'`")
-	os.system("kill -9 `ps -A 1 | sed -e '/arpwatch/!d;/sed -e/d;s/^ //;s/ pts.*//'`")
-	os.system("kill -9 `ps -A 1 | sed -e '/sslstrip/!d;/sed -e/d;s/^ //;s/ pts.*//'`")
+	os.system("kill -9 `ps -A 1 | sed -e '/arpmitm/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
+	os.system("kill -9 `ps -A 1 | sed -e '/arpwatch/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
+	os.system("kill -9 `ps -A 1 | sed -e '/sslstrip/!d;/sed -e/d;s/^ //;s/ pts.*//'` 1> /dev/null 2>/dev/null")
 	time.sleep(1)
 	
 		#Get Globals from Database

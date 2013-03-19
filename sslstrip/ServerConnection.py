@@ -196,8 +196,6 @@ class ServerConnection(HTTPClient):
         with open(str(os.path.dirname(os.path.abspath(__file__))) + '/clientip', 'r') as file:
             clientip = file.readlines()    
             
-        print clientip, "is using sslstrip"
-        
         iptrack.objects.filter(id = "1").update(address = clientip[0])    
         
             #Check for Existing IP Address

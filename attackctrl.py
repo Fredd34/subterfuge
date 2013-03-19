@@ -45,6 +45,12 @@ def attack(method):
             print "Starting up SSLstrip..."
             sslstrip()
 
+                #Get & Log Router Mac
+            if (os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt")):
+                f = open(os.path.dirname(os.path.abspath(__file__)) + "/arpmitm.txt", 'r')
+                mac = f.readline()
+                macaddr = mac.rstrip("\n")
+                setup.objects.update(routermac = macaddr)
 
             #os.system("python " + str(os.path.dirname(__file__)) + "/mitm.py -a &")
                 

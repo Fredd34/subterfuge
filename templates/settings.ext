@@ -326,7 +326,7 @@
 	  $.post("/config/settings/", {
 	      ploadrate	   :	document.getElementById('ploadrate').innerHTML,
 	      injectrate   :	document.getElementById('injectrate').innerHTML,
-	      smartarp	   :	document.getElementById('smartarp').value,
+	      smartarp	   :	document.getElementById('smartarp').checked,
 	      arprate	   :	document.getElementById('arprate').innerHTML
 	});
 	}

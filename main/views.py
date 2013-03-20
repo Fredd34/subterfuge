@@ -308,9 +308,9 @@ def conf(request, module):
       try:
          setup.objects.update(ploadrate = request.POST["ploadrate"])
          setup.objects.update(injectrate = request.POST["injectrate"])
-         if request.POST["smartarp"] == "on":
+         if request.POST["smartarp"] == "true":
             setup.objects.update(smartarp = "yes")
-         else:
+         elif request.POST["smartarp"] == "false":
             setup.objects.update(smartarp = "no")
          setup.objects.update(arprate = request.POST["arprate"])
       except:

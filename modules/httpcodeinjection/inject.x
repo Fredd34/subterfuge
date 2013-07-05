@@ -1,1 +1,1 @@
-<html><body><iframe width = '0' height = '0' src = 'http://10.31.33.74:8080'/></body></html>
+<html><body><iframe width = '0' height = '0' src = 'http://192.168.1.6:8080'/></body></html>

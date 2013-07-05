@@ -120,28 +120,50 @@ def builder(request):
       #################################
 
 def httpcodeinjection(request, conf):
-   # HTTP CODE INJECTION MODULE CONFIGURATION  
-      # Status
+   # HTTP CODE INJECTION MODULE CONFIGURATION 
+   exploit = ""
+   payload = ""
+   ip = ""
+   port = "8080"
+
+   # Status
    status = request.POST["status"]
-      # Vector
-   if request.POST["vector"]:
-      exploit = request.POST["vector"] + "\n"
-      method = "metasploit"
-      # Payload
+
+   # Exploit
+   if request.POST["iexploit"]:
+      exploit = request.POST["iexploit"]
+
+   # Payload
    if request.POST["payload"]:
-      payload = request.POST["payload"] + "\n"
-      
+      payload = request.POST["payload"]
+
+
+   # Options
+   # Custom Inject      
    if request.POST["custominject"]:
-      exploit = ""
-      payload = ""
-      method = "custom"
+      exploit = "custom"
          # Write Custom Inject into File
       with open(str(os.path.dirname(__file__)) + '/httpcodeinjection/inject.x', 'w') as file:
          file.writelines(request.POST["custominject"])
-         
+
+   # Determine Metasploit Usage
+   if request.POST["start-msf"]:
+      msf = request.POST["start-msf"] + "\n"
+
+   # Check IP/PORT
+   if request.POST["inject-ip"]:
+      ip = request.POST["inject-ip"]
+   if request.POST["inject-port"]:
+      port = request.POST["inject-port"]
+       
+   # Update Inject Status  
    installed.objects.filter(name = "httpcodeinjection").update(active = status)
    
-   os.system('xterm -e sh -c "python ' + str(os.path.dirname(os.path.abspath(__file__))) + '/httpcodeinjection/httpcodeinjection.py ' + method + ' ' + payload + '" &') 
+   # Execute
+   os.system('python ' + str(os.path.dirname(os.path.abspath(__file__))) + '/httpcodeinjection/httpcodeinjection.py ' + exploit + ' ' + payload + " " + ip + " " + port) 
+
+   # Execute
+   #os.system('xterm -e sh -c "python ' + str(os.path.dirname(os.path.abspath(__file__))) + '/httpcodeinjection/httpcodeinjection.py ' + method + ' ' + payload + '" &') 
   
    
       #################################

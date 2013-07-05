@@ -1,5 +1,5 @@
 --Main Database Models
-INSERT INTO main_setup VALUES ("1", "", "", "", "yes", "3", "6", "8", "yes", "", "yes");
+INSERT INTO main_setup VALUES ("1", "", "", "", "yes", "3", "6", "8", "no", "", "yes");
 
 
 --Installed Modules

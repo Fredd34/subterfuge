@@ -95,25 +95,7 @@ $(document).ready(function () {
 });
 </script>
 
-<script type="text/javascript">
-$(document).ready(function () {
-  $(".custominjection").hide();
-  
-        //select all the a tags named startpwn
-    $('a[name=custominjection]').click(function(e) {
-            //Cancel the link behavior
-        e.preventDefault();
-            //Get the A tag
-        var id = $(this).attr('href');
-        
-            //Start Pwning
-        $(".custominjection").fadeIn("slow");
-        $(".vector").fadeOut("slow");
 
-    }); 
-  
-});
-</script>
 
 
 <script type="text/javascript">
